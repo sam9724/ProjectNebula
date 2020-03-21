@@ -11,4 +11,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Resources/Sameer/sameerScene.unity
     guid: 6ba726436d56ed84887b6d330a5442f9
+  - enabled: 1
+    path: Assets/Resources/Sai/sampleMainMenu.unity
+    guid: 152f94de859676140965284b0ae7e98c
+  - enabled: 1
+    path: Assets/Resources/Sai/saiScene.unity
+    guid: 41853f1e5256e2a4c91acf4944e281e3
   m_configObjects: {}
