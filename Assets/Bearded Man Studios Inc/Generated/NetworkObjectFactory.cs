@@ -35,17 +35,25 @@ namespace BeardedManStudios.Forge.Networking.Generated
 						availableCallback = true;
 						obj = new ExampleProximityPlayerNetworkObject(networker, id, frame);
 						break;
+					case GunnerNetworkObject.IDENTITY:
+						availableCallback = true;
+						obj = new GunnerNetworkObject(networker, id, frame);
+						break;
 					case NetworkCameraNetworkObject.IDENTITY:
 						availableCallback = true;
 						obj = new NetworkCameraNetworkObject(networker, id, frame);
 						break;
-					case TestNetworkObject.IDENTITY:
+					case PilotNetworkObject.IDENTITY:
 						availableCallback = true;
-						obj = new TestNetworkObject(networker, id, frame);
+						obj = new PilotNetworkObject(networker, id, frame);
 						break;
 					case Player1PositionNetworkObject.IDENTITY:
 						availableCallback = true;
 						obj = new Player1PositionNetworkObject(networker, id, frame);
+						break;
+					case TestNetworkObject.IDENTITY:
+						availableCallback = true;
+						obj = new TestNetworkObject(networker, id, frame);
 						break;
 				}
 
