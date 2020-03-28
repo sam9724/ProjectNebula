@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PlayerManager
 {
@@ -9,12 +10,18 @@ public class PlayerManager
     public static PlayerManager Instance { get { return instance ?? (instance = new PlayerManager()); } }
     #endregion
 
-    Pilot p1;
-    Gunner p2;
+    public Pilot pilot;
+    public Gunner gunner;
+
 
     public void Initialize()
     {
-        
+
+    }
+
+    public void PostInitialize()
+    {
+
     }
 
     public void PhysicsRefresh(float fdt)
@@ -22,14 +29,13 @@ public class PlayerManager
         
     }
 
-    public void PostInitialize()
-    {
-        
-    }
-
     public void Refresh(float dt)
     {
-        
+        if (pilot)
+            pilot.Refresh(dt);
+
+        if (gunner)
+            gunner.Refresh(dt);
     }
     
 
