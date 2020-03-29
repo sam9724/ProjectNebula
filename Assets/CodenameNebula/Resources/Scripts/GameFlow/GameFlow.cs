@@ -32,7 +32,7 @@ public class GameFlow
     public void PhysicsRefresh(float fdt)
     {
         //UIManager.Instance.PhysicsRefresh();
-        //InputManager.Instance.PhysicsRefresh(fdt);
+        InputManager.Instance.PhysicsRefresh();
         PlayerManager.Instance.PhysicsRefresh(fdt);
         //EnemyManager.Instance.PhysicsRefresh(fdt);
 
@@ -41,7 +41,7 @@ public class GameFlow
     public void Refresh(float dt)
     {
         //UIManager.Instance.Refresh();
-        //InputManager.Instance.Refresh(dt);
+        InputManager.Instance.Refresh();
         PlayerManager.Instance.Refresh(dt);
         //EnemyManager.Instance.Refresh(dt);
 

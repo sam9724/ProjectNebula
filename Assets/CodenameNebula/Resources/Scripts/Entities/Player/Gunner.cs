@@ -61,13 +61,15 @@ public class Gunner : GunnerBehavior, IBasePlayer
         //Debug.Log("Pos : " + pos);
 #else
         //rot = Quaternion.Euler(Input.GetAxis("Vertical") * speed * Time.deltaTime, Input.GetAxis("Horizontal") * speed * Time.deltaTime, 0);
-        if (Input.GetKey(KeyCode.A))
+        /*if (Input.GetKey(KeyCode.A))
             transform.RotateAround(transform.position, -Vector3.up, 50 * dt);
         else if (Input.GetKey(KeyCode.D))
-            transform.RotateAround(transform.position, Vector3.up, 50 * dt);
+            transform.RotateAround(transform.position, Vector3.up, 50 * dt);*/
+
+        Vector3 newDir = Vector3.RotateTowards(transform.forward, new Vector3(InputManager.Instance.refreshInputPkg.gunYaw, InputManager.Instance.refreshInputPkg.gunPitch, 0), 30 * Mathf.Deg2Rad * dt, 0);
 #endif
         //if (rot != Quaternion.identity)
-            //transform.rotation = rot;
+        transform.rotation = Quaternion.LookRotation(newDir);
 
         // If we are the owner of the object we should send the new position
         // and rotation across the network for receivers to move to in the above code
