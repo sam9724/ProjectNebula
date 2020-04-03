@@ -8,7 +8,7 @@ using BeardedManStudios.Forge.Networking;
 
 using BeardedManStudios.Forge.Networking.Generated;
 
-public class MainNetworkManager : MainNetworkManagerBehavior
+public class NetworkFlow : NetworkFlowBehavior
 {
     // Start is called before the first frame update
     private bool _networkReady;
@@ -30,6 +30,7 @@ public class MainNetworkManager : MainNetworkManagerBehavior
             c.networkObject.ownerNetworkId = networkObject.MyPlayerId;
             _playerObjects.Add(networkObject.MyPlayerId, c); //p.NetworkId
             c.transform.Find("PilotCamera").gameObject.SetActive(true);
+            //c.transform.Find("PilotCamera").gameObject.tag = "MainCamera";
 
             NetworkManager.Instance.Networker.playerDisconnected += (player, sender) =>
             {
@@ -45,6 +46,7 @@ public class MainNetworkManager : MainNetworkManagerBehavior
             r.networkObject.ownerNetworkId = networkObject.MyPlayerId;
             _gunObjects.Add(networkObject.MyPlayerId, r);
             r.transform.Find("GunnerCamera").gameObject.SetActive(true);
+            //r.transform.Find("GunnerCamera").gameObject.tag = "MainCamera";
 
 
             NetworkManager.Instance.Networker.playerDisconnected += (player, sender) =>

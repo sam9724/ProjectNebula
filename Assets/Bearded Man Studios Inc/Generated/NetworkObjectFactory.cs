@@ -43,6 +43,10 @@ namespace BeardedManStudios.Forge.Networking.Generated
 						availableCallback = true;
 						obj = new NetworkCameraNetworkObject(networker, id, frame);
 						break;
+					case NetworkFlowNetworkObject.IDENTITY:
+						availableCallback = true;
+						obj = new NetworkFlowNetworkObject(networker, id, frame);
+						break;
 					case PilotNetworkObject.IDENTITY:
 						availableCallback = true;
 						obj = new PilotNetworkObject(networker, id, frame);
@@ -54,10 +58,6 @@ namespace BeardedManStudios.Forge.Networking.Generated
 					case TestNetworkObject.IDENTITY:
 						availableCallback = true;
 						obj = new TestNetworkObject(networker, id, frame);
-						break;
-					case MainNetworkManagerNetworkObject.IDENTITY:
-						availableCallback = true;
-						obj = new MainNetworkManagerNetworkObject(networker, id, frame);
 						break;
 				}
 

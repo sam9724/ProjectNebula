@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace BeardedManStudios.Forge.Networking.Generated
 {
-	[GeneratedInterpol("{\"inter\":[0,0.15,0]")]
+	[GeneratedInterpol("{\"inter\":[0,0.15,0,0]")]
 	public partial class GunnerNetworkObject : NetworkObject
 	{
-		public const int IDENTITY = 4;
+		public const int IDENTITY = 10;
 
 		private byte[] _dirtyFields = new byte[1];
 
@@ -108,6 +108,37 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			if (healthChanged != null) healthChanged(_health, timestep);
 			if (fieldAltered != null) fieldAltered("health", _health, timestep);
 		}
+		[ForgeGeneratedField]
+		private Vector3 _target;
+		public event FieldEvent<Vector3> targetChanged;
+		public InterpolateVector3 targetInterpolation = new InterpolateVector3() { LerpT = 0f, Enabled = false };
+		public Vector3 target
+		{
+			get { return _target; }
+			set
+			{
+				// Don't do anything if the value is the same
+				if (_target == value)
+					return;
+
+				// Mark the field as dirty for the network to transmit
+				_dirtyFields[0] |= 0x8;
+				_target = value;
+				hasDirtyFields = true;
+			}
+		}
+
+		public void SettargetDirty()
+		{
+			_dirtyFields[0] |= 0x8;
+			hasDirtyFields = true;
+		}
+
+		private void RunChange_target(ulong timestep)
+		{
+			if (targetChanged != null) targetChanged(_target, timestep);
+			if (fieldAltered != null) fieldAltered("target", _target, timestep);
+		}
 
 		protected override void OwnershipChanged()
 		{
@@ -120,6 +151,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			ownerNetworkIdInterpolation.current = ownerNetworkIdInterpolation.target;
 			rotationInterpolation.current = rotationInterpolation.target;
 			healthInterpolation.current = healthInterpolation.target;
+			targetInterpolation.current = targetInterpolation.target;
 		}
 
 		public override int UniqueIdentity { get { return IDENTITY; } }
@@ -129,6 +161,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			UnityObjectMapper.Instance.MapBytes(data, _ownerNetworkId);
 			UnityObjectMapper.Instance.MapBytes(data, _rotation);
 			UnityObjectMapper.Instance.MapBytes(data, _health);
+			UnityObjectMapper.Instance.MapBytes(data, _target);
 
 			return data;
 		}
@@ -147,6 +180,10 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			healthInterpolation.current = _health;
 			healthInterpolation.target = _health;
 			RunChange_health(timestep);
+			_target = UnityObjectMapper.Instance.Map<Vector3>(payload);
+			targetInterpolation.current = _target;
+			targetInterpolation.target = _target;
+			RunChange_target(timestep);
 		}
 
 		protected override BMSByte SerializeDirtyFields()
@@ -160,6 +197,8 @@ namespace BeardedManStudios.Forge.Networking.Generated
 				UnityObjectMapper.Instance.MapBytes(dirtyFieldsData, _rotation);
 			if ((0x4 & _dirtyFields[0]) != 0)
 				UnityObjectMapper.Instance.MapBytes(dirtyFieldsData, _health);
+			if ((0x8 & _dirtyFields[0]) != 0)
+				UnityObjectMapper.Instance.MapBytes(dirtyFieldsData, _target);
 
 			// Reset all the dirty fields
 			for (int i = 0; i < _dirtyFields.Length; i++)
@@ -215,6 +254,19 @@ namespace BeardedManStudios.Forge.Networking.Generated
 					RunChange_health(timestep);
 				}
 			}
+			if ((0x8 & readDirtyFlags[0]) != 0)
+			{
+				if (targetInterpolation.Enabled)
+				{
+					targetInterpolation.target = UnityObjectMapper.Instance.Map<Vector3>(data);
+					targetInterpolation.Timestep = timestep;
+				}
+				else
+				{
+					_target = UnityObjectMapper.Instance.Map<Vector3>(data);
+					RunChange_target(timestep);
+				}
+			}
 		}
 
 		public override void InterpolateUpdate()
@@ -236,6 +288,11 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			{
 				_health = (float)healthInterpolation.Interpolate();
 				//RunChange_health(healthInterpolation.Timestep);
+			}
+			if (targetInterpolation.Enabled && !targetInterpolation.current.UnityNear(targetInterpolation.target, 0.0015f))
+			{
+				_target = (Vector3)targetInterpolation.Interpolate();
+				//RunChange_target(targetInterpolation.Timestep);
 			}
 		}
 

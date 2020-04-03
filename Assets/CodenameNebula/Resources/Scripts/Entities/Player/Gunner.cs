@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using BeardedManStudios.Forge.Networking.Generated;
+using BeardedManStudios.Forge.Networking;
 
 public class Gunner : GunnerBehavior, IBasePlayer
 {
@@ -8,13 +9,18 @@ public class Gunner : GunnerBehavior, IBasePlayer
     public bool StalkEnemy { get; set; }
     public CharacterStats CharStats { get; set; }
 
-    public float gunCooldown;
+    public float gunCooldown = 1;
+    float gunCounter;
+
+    public Transform muzzle;
+    public Vector3 target;
 
     //required coz we don't control the spawning of networked objects in the scene.
     public void Start()
     {
         PlayerManager.Instance.gunner = this;
         transform.SetParent(PlayerManager.Instance.pilot.transform);
+        muzzle = transform.Find("Muzzle");
     }
     public void Initialize()
     {
@@ -49,27 +55,13 @@ public class Gunner : GunnerBehavior, IBasePlayer
         if (!networkObject.IsOwner)
         {
             transform.rotation = networkObject.rotation;
+            target = networkObject.target;
             return;
         }
 
         // Let the owner move the cube around with the arrow keys
-        Quaternion rot;
 
-#if UNITY_ANDROID
-        rot = Quaternion.Euler(variableJoystick.Vertical * speed * Time.deltaTime, variableJoystick.Horizontal * speed * Time.deltaTime, 0);
-        //pos = new Vector3(variableJoystick.Horizontal, 0, variableJoystick.Vertical).normalized * speed * Time.deltaTime;
-        //Debug.Log("Pos : " + pos);
-#else
-        //rot = Quaternion.Euler(Input.GetAxis("Vertical") * speed * Time.deltaTime, Input.GetAxis("Horizontal") * speed * Time.deltaTime, 0);
-        /*if (Input.GetKey(KeyCode.A))
-            transform.RotateAround(transform.position, -Vector3.up, 50 * dt);
-        else if (Input.GetKey(KeyCode.D))
-            transform.RotateAround(transform.position, Vector3.up, 50 * dt);*/
-
-        Vector3 newDir = Vector3.RotateTowards(transform.forward, new Vector3(InputManager.Instance.refreshInputPkg.gunYaw, InputManager.Instance.refreshInputPkg.gunPitch, 0), 30 * Mathf.Deg2Rad * dt, 0);
-#endif
-        //if (rot != Quaternion.identity)
-        transform.rotation = Quaternion.LookRotation(newDir);
+        transform.Rotate(new Vector3(InputManager.Instance.refreshInputPkg.gunYaw, InputManager.Instance.refreshInputPkg.gunPitch, 0)* 30 * dt);
 
         // If we are the owner of the object we should send the new position
         // and rotation across the network for receivers to move to in the above code
@@ -77,5 +69,18 @@ public class Gunner : GunnerBehavior, IBasePlayer
 
         // Note: Forge Networking takes care of only sending the delta, so there
         // is no need for you to do that manually
+        
+        gunCounter += dt;
+        if (InputManager.Instance.refreshInputPkg.fire)
+        {
+            if (gunCounter > gunCooldown)
+            {
+                gunCounter = 0;
+                networkObject.target = target;
+                networkObject.SendRpc(RPC_SHOOT, Receivers.All);
+            }
+        }
     }
+
+    public override void Shoot(RpcArgs args) => ProjectileFactory.Instance.CreateProjectile(ProjectileFactory.ProjectileType.Rail, muzzle.position, target);
 }
