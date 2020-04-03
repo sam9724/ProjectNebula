@@ -13,7 +13,7 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable
     public float boost;
     float boostCooldown;
 
-    float speed = 5;
+    float speed = 15;
 
     public Rigidbody rb;
 
@@ -64,19 +64,9 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable
         }
 
         // Let the owner move the cube around with the arrow keys
-        Vector3 pos;
 
-        //pos = Vector3.forward * Input.GetAxis("Vertical")//variableJoystick.Vertical 
-        //+ Vector3.right * Input.GetAxis("Horizontal");//variableJoystick.Horizontal;
-#if UNITY_ANDROID
-
-        pos = new Vector3(variableJoystick.Horizontal, 0, variableJoystick.Vertical).normalized * speed * Time.deltaTime;
-        //Debug.Log("Pos : " + pos);
-#else
-        pos = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")).normalized * speed * dt;
-        //Debug.Log("Pos : " + pos);
-#endif
-        transform.position += pos;
+        rb.AddRelativeForce(Vector3.forward * InputManager.Instance.refreshInputPkg.accelerate * dt * speed);
+        rb.AddRelativeTorque(new Vector3(InputManager.Instance.refreshInputPkg.yaw, InputManager.Instance.refreshInputPkg.pitch, InputManager.Instance.refreshInputPkg.roll) * dt * speed);
 
         // If we are the owner of the object we should send the new position
         // and rotation across the network for receivers to move to in the above code

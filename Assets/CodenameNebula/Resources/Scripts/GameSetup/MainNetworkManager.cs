@@ -29,6 +29,7 @@ public class MainNetworkManager : MainNetworkManagerBehavior
             PilotBehavior c = NetworkManager.Instance.InstantiatePilot(0, new Vector3(0, 0.55f, 0));    // Changed DKE to include index and start position
             c.networkObject.ownerNetworkId = networkObject.MyPlayerId;
             _playerObjects.Add(networkObject.MyPlayerId, c); //p.NetworkId
+            c.transform.Find("PilotCamera").gameObject.SetActive(true);
 
             NetworkManager.Instance.Networker.playerDisconnected += (player, sender) =>
             {
@@ -43,6 +44,8 @@ public class MainNetworkManager : MainNetworkManagerBehavior
             GunnerBehavior r = NetworkManager.Instance.InstantiateGunner(0, PlayerManager.Instance.pilot.gunnerSpawnPos.position);    //, new Vector3(0, 0, 2) Changed DKE to include index and start position
             r.networkObject.ownerNetworkId = networkObject.MyPlayerId;
             _gunObjects.Add(networkObject.MyPlayerId, r);
+            r.transform.Find("GunnerCamera").gameObject.SetActive(true);
+
 
             NetworkManager.Instance.Networker.playerDisconnected += (player, sender) =>
             {
