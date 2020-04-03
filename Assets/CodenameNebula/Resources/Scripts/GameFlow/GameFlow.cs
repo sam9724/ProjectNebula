@@ -17,7 +17,7 @@ public class GameFlow
         //UIManager.Instance.Initialize();
         //InputManager.Instance.Initialize();
         PlayerManager.Instance.Initialize();
-        //EnemyManager.Instance.Initialize();
+        EnemyManager.Instance.Initialize();
     }
 
     public void PostInitialize()
@@ -25,7 +25,7 @@ public class GameFlow
         //UIManager.Instance.PostInitialize();
         //InputManager.Instance.PostInitialize();
         PlayerManager.Instance.PostInitialize();
-        //EnemyManager.Instance.PostInitialize();
+        EnemyManager.Instance.PostInitialize();
 
     }
 
@@ -34,7 +34,7 @@ public class GameFlow
         //UIManager.Instance.PhysicsRefresh();
         //InputManager.Instance.PhysicsRefresh(fdt);
         PlayerManager.Instance.PhysicsRefresh(fdt);
-        //EnemyManager.Instance.PhysicsRefresh(fdt);
+        EnemyManager.Instance.PhysicsRefresh(fdt);
 
     }
 
@@ -43,7 +43,7 @@ public class GameFlow
         //UIManager.Instance.Refresh();
         //InputManager.Instance.Refresh(dt);
         PlayerManager.Instance.Refresh(dt);
-        //EnemyManager.Instance.Refresh(dt);
+        EnemyManager.Instance.Refresh(dt);
 
     }
 

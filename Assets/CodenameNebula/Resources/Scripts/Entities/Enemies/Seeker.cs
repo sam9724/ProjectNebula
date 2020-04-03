@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Seeker : MonoBehaviour, IMinion, IManagable
+public class Seeker : Enemy, IMinion, IManagable
 {
 
     public bool MoveWithBoss { get; set; }

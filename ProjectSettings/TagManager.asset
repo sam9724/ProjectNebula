@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Player1Camera
   - Player2Camera
+  - MotherShip
   layers:
   - Default
   - TransparentFX

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class Drone : MonoBehaviour, IMinion, IManagable
+public class Drone : Enemy, IMinion, IManagable
 {
     public bool MoveWithBoss { get; set; }
     public bool SeekPlayer { get; set; }

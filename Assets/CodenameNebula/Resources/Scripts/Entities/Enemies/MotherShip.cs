@@ -11,6 +11,7 @@ public class MotherShip : MonoBehaviour, IBaseEnemy, IManagable
 
     float shieldCooldown;
     float cloakCooldown;
+    Transform player;
 
     public void Die()
     {
@@ -42,6 +43,15 @@ public class MotherShip : MonoBehaviour, IBaseEnemy, IManagable
         
     }
 
+    //bool PlayerInRange()
+    //{
+        
+    //}
+
+    void FollowPlayer()
+    {
+        
+    }
     //AI Logic
 }
 
