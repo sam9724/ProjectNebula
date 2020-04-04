@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-public class ProjectileFactory : MonoBehaviour
+public class ProjectileFactory
 {
 
     #region Singleton
@@ -19,7 +18,7 @@ public class ProjectileFactory : MonoBehaviour
 
     public void Initialize()
     {
-        prefabDict = Resources.LoadAll<GameObject>("Resources/Projectiles/").ToDictionary(x => x.name, x => x);
+        prefabDict = Resources.LoadAll<GameObject>("Prefabs/Projectiles/").ToDictionary(x => x.name);
     }
 
     public Projectile CreateProjectile(ProjectileType pType, Vector3 pos, Vector3 target, float speed = 10)

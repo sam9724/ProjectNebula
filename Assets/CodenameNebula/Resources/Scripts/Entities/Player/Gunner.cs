@@ -9,6 +9,7 @@ public class Gunner : GunnerBehavior, IBasePlayer
     public bool StalkEnemy { get; set; }
     public CharacterStats CharStats { get; set; }
 
+    float rotateSpeed = 10;
     public float gunCooldown = 1;
     float gunCounter;
 
@@ -20,7 +21,7 @@ public class Gunner : GunnerBehavior, IBasePlayer
     {
         PlayerManager.Instance.gunner = this;
         transform.SetParent(PlayerManager.Instance.pilot.transform);
-        muzzle = transform.Find("Muzzle");
+        muzzle = transform.Find("Barrel/Muzzle");
     }
     public void Initialize()
     {
@@ -61,7 +62,7 @@ public class Gunner : GunnerBehavior, IBasePlayer
 
         // Let the owner move the cube around with the arrow keys
 
-        transform.Rotate(new Vector3(InputManager.Instance.refreshInputPkg.gunYaw, InputManager.Instance.refreshInputPkg.gunPitch, 0)* 30 * dt);
+        transform.Rotate(new Vector3(InputManager.Instance.refreshInputPkg.gunYaw, InputManager.Instance.refreshInputPkg.gunPitch, 0)* rotateSpeed * dt);
 
         // If we are the owner of the object we should send the new position
         // and rotation across the network for receivers to move to in the above code
@@ -75,9 +76,15 @@ public class Gunner : GunnerBehavior, IBasePlayer
         {
             if (gunCounter > gunCooldown)
             {
-                gunCounter = 0;
-                networkObject.target = target;
-                networkObject.SendRpc(RPC_SHOOT, Receivers.All);
+                if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, Mathf.Infinity))
+                {
+                    gunCounter = 0;
+                    target = hit.point;
+                    networkObject.target = target;
+                    networkObject.SendRpc(RPC_SHOOT, Receivers.All);
+                    //ProjectileFactory.Instance.CreateProjectile(ProjectileFactory.ProjectileType.Rail, muzzle.position, target);
+                }
+                
             }
         }
     }

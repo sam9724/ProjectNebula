@@ -29,8 +29,6 @@ public class ProjectileManager : MonoBehaviour
         projectiles = new HashSet<Projectile>();
         projParent = new GameObject("ProjParent").transform;
         pooledBulletParent = new GameObject("DeadProj").transform;
-        //prefabDict = new Dictionary<string, GameObject>();
-        //prefabDict = Resources.LoadAll<GameObject>("Resources/Projectiles/").ToDictionary(x => x.name, x => x);
     }
 
     public void PostInitialize()

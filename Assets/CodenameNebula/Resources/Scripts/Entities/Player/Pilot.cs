@@ -13,7 +13,7 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable
     public float boost;
     float boostCooldown;
 
-    float speed = 15;
+    float moveSpeed = 10;
 
     public Rigidbody rb;
 
@@ -65,8 +65,8 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable
 
         // Let the owner move the cube around with the arrow keys
 
-        rb.AddRelativeForce(Vector3.forward * InputManager.Instance.refreshInputPkg.accelerate * dt * speed);
-        rb.AddRelativeTorque(new Vector3(InputManager.Instance.refreshInputPkg.yaw, InputManager.Instance.refreshInputPkg.pitch, InputManager.Instance.refreshInputPkg.roll) * dt * speed);
+        rb.AddRelativeForce(Vector3.forward * InputManager.Instance.refreshInputPkg.accelerate * dt * moveSpeed);
+        rb.AddRelativeTorque(new Vector3(InputManager.Instance.refreshInputPkg.yaw, InputManager.Instance.refreshInputPkg.pitch, 0) * dt * moveSpeed);
 
         // If we are the owner of the object we should send the new position
         // and rotation across the network for receivers to move to in the above code

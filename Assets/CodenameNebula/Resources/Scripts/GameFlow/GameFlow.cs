@@ -16,8 +16,10 @@ public class GameFlow
         //GameSetup.gs = GameObject.FindObjectOfType<GameSetup>();
         //UIManager.Instance.Initialize();
         //InputManager.Instance.Initialize();
+        ProjectileFactory.Instance.Initialize();
         PlayerManager.Instance.Initialize();
         EnemyManager.Instance.Initialize();
+        ProjectileManager.Instance.Initialize();
     }
 
     public void PostInitialize()
@@ -44,6 +46,7 @@ public class GameFlow
         InputManager.Instance.Refresh();
         PlayerManager.Instance.Refresh(dt);
         EnemyManager.Instance.Refresh(dt);
+        ProjectileManager.Instance.Refresh(dt);
 
     }
 

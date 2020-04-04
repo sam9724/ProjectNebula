@@ -24,6 +24,11 @@ public class InputManager : IManagable
         SetInputPkg(physicsRefreshInputPkg);
     }
 
+    public void Refresh()
+    {
+        SetInputPkg(refreshInputPkg);
+    }
+
     private void SetInputPkg(InputPkg ip)
     {
 #if UNITY_ANDROID
@@ -32,8 +37,8 @@ public class InputManager : IManagable
 #else
         //ship
         ip.yaw = Input.GetAxis("Mouse Y");
-        ip.pitch = Input.GetAxis("Mouse X");
-        ip.roll = Input.GetAxis("Horizontal");
+        ip.pitch = Input.GetAxis("Horizontal");
+        //ip.roll = Input.GetAxis("Horizontal");
         ip.accelerate = Input.GetAxis("Vertical");
 
         ip.hyperDrive = Input.GetMouseButton(0);
@@ -45,11 +50,6 @@ public class InputManager : IManagable
         ip.fire = Input.GetMouseButton(0);
 #endif
 
-    }
-
-    public void Refresh()
-    {
-        SetInputPkg(refreshInputPkg);
     }
 
     public void PostInitialize()
