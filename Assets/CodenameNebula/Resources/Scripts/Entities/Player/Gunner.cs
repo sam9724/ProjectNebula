@@ -75,7 +75,9 @@ public class Gunner : GunnerBehavior, IBasePlayer
 #if UNITY_ANDROID
         gryo = Input.gyro;
         gryo.enabled = true;
-        transform.localRotation = gryo.attitude * new Quaternion(0,0,1,0);
+       // transform.localRotation = gryo.attitude * new Quaternion(0,0,1,0);
+        gunBase.Rotate(new Vector3(0, gryo.attitude.eulerAngles.x , 0)* rotateSpeed * dt);
+        barrel.Rotate(new Vector3(-gryo.attitude.eulerAngles.y, 0, 0) * rotateSpeed * dt);
 #else
         gunBase.Rotate(new Vector3(0, InputManager.Instance.inputPkg.gunYaw, 0)* rotateSpeed * dt);
         barrel.Rotate(new Vector3(-InputManager.Instance.inputPkg.gunPitch, 0, 0) * rotateSpeed * dt);
