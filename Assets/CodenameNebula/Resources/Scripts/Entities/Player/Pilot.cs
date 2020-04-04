@@ -77,7 +77,7 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable
         // is no need for you to do that manually
     }
 
-    public void TakeDamage()
+    public void TakeDamage(float damage)
     {
         //to be implemented
     }

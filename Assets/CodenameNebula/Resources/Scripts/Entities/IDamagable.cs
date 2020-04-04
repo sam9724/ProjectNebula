@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 public interface IDamagable
 {
-    void TakeDamage();
+    void TakeDamage(float damage);
     void Die();
 }
 

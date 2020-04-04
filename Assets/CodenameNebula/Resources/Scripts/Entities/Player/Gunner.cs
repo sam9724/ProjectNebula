@@ -21,7 +21,7 @@ public class Gunner : GunnerBehavior, IBasePlayer
     {
         PlayerManager.Instance.gunner = this;
         transform.SetParent(PlayerManager.Instance.pilot.transform);
-        muzzle = transform.Find("Barrel/Muzzle");
+        muzzle = transform.Find("Barrel/Muzzle"); //Base/ - for new prefab
     }
     public void Initialize()
     {

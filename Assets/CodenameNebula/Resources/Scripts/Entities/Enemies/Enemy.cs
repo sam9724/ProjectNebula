@@ -27,9 +27,7 @@ public class Enemy : MonoBehaviour
     public virtual void Shoot() {  }
     public virtual void Die()
     {
-        EnemyManager.Instance.EnemyDied(this);
-      
-        isAlive = false;
+        
     }
 
 }

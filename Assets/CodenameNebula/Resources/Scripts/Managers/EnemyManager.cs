@@ -12,22 +12,23 @@ public class EnemyManager
     public static EnemyManager Instance { get { return instance ?? (instance = new EnemyManager()); } }
     #endregion
 
-    public Stack<Enemy> toRemove;
-    public Stack<Enemy> toAdd;
-    public HashSet<Enemy> enemies;//stacks to keep track of enemies
+    public Stack<IBaseEnemy> toRemove;
+    public Stack<IBaseEnemy> toAdd;
+    public HashSet<IBaseEnemy> enemies;//stacks to keep track of enemies
     public Transform enemyParent;
-    float DroneHealth, seekerHealth;
+    //float DroneHealth, seekerHealth;
     Transform MinionsSpawnLocation;
     Dictionary<EnemyType, GameObject> enemyPrefabDict = new Dictionary<EnemyType, GameObject>(); //all enemy prefabs
 
+    MotherShip mothership;
 
     public void Initialize()
     {
-        DroneHealth = MotherShipClass.DroneHealth;
-        seekerHealth = MotherShipClass.SeekerHealth;
-        toRemove = new Stack<Enemy>();
-        toAdd = new Stack<Enemy>();
-        enemies = new HashSet<Enemy>();
+        //DroneHealth = MotherShipClass.DroneHealth;
+        //seekerHealth = MotherShipClass.SeekerHealth;
+        toRemove = new Stack<IBaseEnemy>();
+        toAdd = new Stack<IBaseEnemy>();
+        enemies = new HashSet<IBaseEnemy>();
         enemyParent = new GameObject("EnemyParent").transform;
         MinionsSpawnLocation = MotherShipClass.MinionsSpawnLocation;
         foreach (EnemyType etype in System.Enum.GetValues(typeof(EnemyType))) //fill the resource dictionary with all the prefabs
@@ -50,9 +51,9 @@ public class EnemyManager
     
     public void Refresh(float dt)
     {
-        foreach (Enemy e in enemies)
+        foreach (IBaseEnemy e in enemies)
         {
-            if (e.isAlive)
+            if (e.IsAlive)
             {
                 e.Refresh();
             }
@@ -60,11 +61,11 @@ public class EnemyManager
 
         while (toRemove.Count > 0) //remove all dead ones
         {
-            Enemy e = toRemove.Pop();
-            GameObject o = e.gameObject;
+            IBaseEnemy e = toRemove.Pop();
+            GameObject o = (e as MonoBehaviour).gameObject;
             enemies.Remove(e);            
-            o.GetComponent<Enemy>().enabled = false; //.gameObject.SetActive(false);
-            GameObject.Destroy(e.gameObject, 15f);
+           // o.GetComponent<IBaseEnemy>().enabled = false; //.gameObject.SetActive(false);
+            GameObject.Destroy(o, 1f);
         }
 
         while (toAdd.Count > 0) //Add new ones
@@ -84,31 +85,24 @@ public class EnemyManager
         SpawnMinions(EnemyType.Seeker, seeker);;
 
     }
-    public Enemy SpawnMinions(EnemyType etype, int qty)
+    public IBaseEnemy SpawnMinions(EnemyType etype, int qty)
     {
-        Enemy e = null;
-        
-            for (int i = 0; i < qty; i++)
-            {
+        IBaseEnemy e = null;
+        for (int i = 0; i < qty; i++)
+        {
             GameObject newEnemy = GameObject.Instantiate(enemyPrefabDict[etype],enemyParent);
             newEnemy.transform.position += MotherShipClass.MinionsSpawnLocation.position;
             Debug.Log("New Enemy Created");
-
-                e = newEnemy.GetComponent<Enemy>();
-            
-            if (etype.Equals(EnemyType.Drones))
-                    e.Initialize(DroneHealth);
-                else if (etype.Equals(EnemyType.Seeker))
-                    e.Initialize(seekerHealth);
-                toAdd.Push(e);
-            }           
+            e = newEnemy.GetComponent<IBaseEnemy>();
+            e.Initialize();
+            toAdd.Push(e);
+        }           
         return e;
     }
 
-    public void EnemyDied(Enemy enemyDied)
+    public void EnemyDied(IBaseEnemy enemyDied)
     {
         toRemove.Push(enemyDied);
-
     }
 
 }

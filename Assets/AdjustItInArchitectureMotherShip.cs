@@ -38,8 +38,6 @@ public class AdjustItInArchitectureMotherShip : MonoBehaviour
         MotherShipClass.playerDetectionRange = playerDetectionRange;
         MotherShipClass.rotateSpeed = rotateSpeed;
         MotherShipClass.MovementSpeed = MovementSpeed;
-        MotherShipClass.DroneHealth = DroneHealth;
-        MotherShipClass.SeekerHealth = SeekerHealth;
         MotherShipClass.MinionsSpawnLocation = MinionsSpawnLocation;
         MotherShipClass.xMin = xMin;
         MotherShipClass.xMax = xMax;

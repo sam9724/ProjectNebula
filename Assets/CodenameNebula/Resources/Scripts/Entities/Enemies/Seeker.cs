@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Seeker : Enemy, IMinion, IManagable
+public class Seeker : MonoBehaviour, IMinion
 {
 
     public bool MoveWithBoss { get; set; }
@@ -10,6 +10,7 @@ public class Seeker : Enemy, IMinion, IManagable
     public bool ChasePlayer { get; set; }
     public bool Wander { get; set; }
     public CharacterStats CharStats { get; set; }
+    public bool IsAlive { get; set; }
 
     /*public IPoolable Dequeue()
     {
@@ -29,7 +30,7 @@ public class Seeker : Enemy, IMinion, IManagable
 
     public void Initialize()
     {
-        
+        CharStats = new CharacterStats(10, 0);
     }
 
     public void PhysicsRefresh()
@@ -50,6 +51,11 @@ public class Seeker : Enemy, IMinion, IManagable
     public void TakeDamage()
     {
         
+    }
+
+    public void TakeDamage(float damage)
+    {
+        //throw new System.NotImplementedException();
     }
 
     //AI Logic

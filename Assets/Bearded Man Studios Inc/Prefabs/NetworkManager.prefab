@@ -58,4 +58,6 @@ MonoBehaviour:
   - {fileID: 4462340153135434786, guid: 9fe7aa1bd361f964b95bb05f2b27fd0a, type: 3}
   Player1PositionNetworkObject: []
   TestNetworkObject: []
+  MothershipNetworkObject:
+  - {fileID: 7057162320259732471, guid: 5ba55f63db9b55345891295fcf514829, type: 3}
   automaticScenes: 1

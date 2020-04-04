@@ -48,6 +48,8 @@ public class NetworkFlow : NetworkFlowBehavior
             r.transform.Find("GunnerCamera").gameObject.SetActive(true);
             //r.transform.Find("GunnerCamera").gameObject.tag = "MainCamera";
 
+            NetworkManager.Instance.InstantiateMothership(0, new Vector3(0, 0.55f, -5));
+
 
             NetworkManager.Instance.Networker.playerDisconnected += (player, sender) =>
             {

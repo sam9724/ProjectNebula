@@ -8,7 +8,7 @@ public class Asteroid : MonoBehaviour, IDamagable, IManagable
         //to be implemented;
     }
 
-    public void TakeDamage()
+    public void TakeDamage(float damage)
     {
         //to be implemented;
     }

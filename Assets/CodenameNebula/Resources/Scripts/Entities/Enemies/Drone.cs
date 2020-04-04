@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class Drone : Enemy, IMinion, IManagable
+public class Drone : MonoBehaviour, IMinion
 {
     public bool MoveWithBoss { get; set; }
     public bool SeekPlayer { get; set; }
     public bool ChasePlayer { get; set; }
     public bool Wander { get; set; }
     public CharacterStats CharStats { get; set; }
+    public bool IsAlive { get; set; }
 
     /*public IPoolable Dequeue()
     {
@@ -29,7 +30,7 @@ public class Drone : Enemy, IMinion, IManagable
 
     public void Initialize()
     {
-        
+        CharStats = new CharacterStats(10, 0);
     }
 
     public void PhysicsRefresh()
@@ -50,6 +51,11 @@ public class Drone : Enemy, IMinion, IManagable
     public void TakeDamage()
     {
         //to be implemented
+    }
+
+    public void TakeDamage(float damage)
+    {
+        //throw new System.NotImplementedException();
     }
 
     //AI Logic

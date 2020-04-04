@@ -11,8 +11,6 @@ public static class MotherShipClass
     static public float rotateSpeed = 5f;
     static public float MovementSpeed = 5f;
 
-    static public float DroneHealth = 0f;
-    static public float SeekerHealth = 0f;
 
     static public Transform MinionsSpawnLocation;
 

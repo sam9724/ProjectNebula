@@ -9,22 +9,27 @@ public class Projectile : MonoBehaviour, IPoolable
     public float speed = 10;
     //public GameObject collisionExplosion;
 
-    public void Initialize()
+    public virtual void Initialize()
     {
 
     }
 
-    public void PhysicsRefresh()
+    public virtual void PhysicsRefresh()
     {
 
     }
 
-    public void PostInitialize()
+    public virtual void PostInitialize()
     {
 
     }
 
-    public void Refresh(float dt)
+    public virtual void Refresh(float dt)
+    {
+        FollowTarget(dt);
+    }
+
+    protected virtual void FollowTarget(float dt)
     {
         if (target != null)
         {
@@ -38,13 +43,13 @@ public class Projectile : MonoBehaviour, IPoolable
         }
     }
 
-    void Died()
+    protected void Died()
     {
         gameObject.SetActive(false);
         ProjectileManager.Instance.ProjectileDied(this);
     }
 
-    /*void Explode()
+    /*protected virtual void Explode()
     {
         if (collisionExplosion != null)
         {
