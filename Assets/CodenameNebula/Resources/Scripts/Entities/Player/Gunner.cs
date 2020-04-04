@@ -10,6 +10,7 @@ public class Gunner : GunnerBehavior, IBasePlayer
     public CharacterStats CharStats { get; set; }
 
     float rotateSpeed = 20;
+     Gyroscope gryo;
     public float gunCooldown = 1;
     float gunCounter;
 
@@ -69,9 +70,16 @@ public class Gunner : GunnerBehavior, IBasePlayer
 
         // Let the owner move the cube around with the arrow keys
 
+        
+
+#if UNITY_ANDROID
+        gryo = Input.gyro;
+        gryo.enabled = true;
+        transform.localRotation = gryo.attitude * new Quaternion(0,0,1,0);
+#else
         gunBase.Rotate(new Vector3(0, InputManager.Instance.inputPkg.gunYaw, 0)* rotateSpeed * dt);
         barrel.Rotate(new Vector3(-InputManager.Instance.inputPkg.gunPitch, 0, 0) * rotateSpeed * dt);
-
+#endif
         // If we are the owner of the object we should send the new position
         // and rotation across the network for receivers to move to in the above code
         networkObject.baseRotation = gunBase.rotation;
