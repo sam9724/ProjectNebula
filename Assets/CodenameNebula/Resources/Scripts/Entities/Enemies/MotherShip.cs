@@ -82,7 +82,7 @@ public class MotherShip : MothershipBehavior, IBaseEnemy
         
     }
 
-    public void Refresh()
+    public void Update()
     {
         player = player ?? PlayerManager.Instance.pilot.transform;
         /*if (networkObject == null)
@@ -96,6 +96,8 @@ public class MotherShip : MothershipBehavior, IBaseEnemy
             transform.rotation = networkObject.rotation;
             return;
         }*/
+        Debug.Log("player"+player.name);
+
         if (PlayerInRange())
         {
             motherShipAnimator.SetBool("PlayerInRange", true);
@@ -108,11 +110,10 @@ public class MotherShip : MothershipBehavior, IBaseEnemy
 
     bool PlayerInRange()
     {
-        if (Vector3.SqrMagnitude(transform.position - player.position) < playerDetectionRange)
-        {
-            return true;
-        }
-        return false;
+      //kk
+      //no
+
+        return (Vector3.SqrMagnitude(transform.position - player.position) < playerDetectionRange);
     }
 
     public void TakeDamage(float damage)
@@ -132,6 +133,11 @@ public class MotherShip : MothershipBehavior, IBaseEnemy
     }
 
     public override void spawnMinions(RpcArgs args)
+    {
+        //throw new System.NotImplementedException();
+    }
+
+    public void Refresh()
     {
         //throw new System.NotImplementedException();
     }
