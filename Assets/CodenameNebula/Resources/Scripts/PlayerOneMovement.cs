@@ -11,8 +11,6 @@ public class PlayerOneMovement : Player1PositionBehavior
     public DynamicJoystick AltitudeJoystick;
     public Rigidbody rb;
   
-
-    // Update is called once per frame
     public void FixedUpdate()
     {
         if (!networkObject.IsOwner)

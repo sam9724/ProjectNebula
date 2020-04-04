@@ -19,15 +19,29 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable
 
     public Transform gunnerSpawnPos;
 
+    DynamicJoystick DynamicJoystick;
+    DynamicJoystick AltitudeJoystick;
+
+
     //required coz we don't control the spawning of networked objects in the scene.
     public void Start()
     {
+        
         PlayerManager.Instance.pilot = this;
         gunnerSpawnPos = transform.Find("TurretSpawnLoc");
         rb = gameObject.GetComponent<Rigidbody>();
+
+        DynamicJoystick = GameObject.FindGameObjectWithTag("dynamicjoystick").GetComponent<DynamicJoystick>();
+        AltitudeJoystick = GameObject.FindGameObjectWithTag("Altitude").GetComponent<DynamicJoystick>();
     }
     public void Initialize()
     {
+
+        //DynamicJoystick[] ds= GameObject.FindObjectsOfType<DynamicJoystick>();
+        //if(ds[0].CompareTag(""))
+        //{
+
+        //}
 
     }
 
@@ -64,9 +78,24 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable
         }
 
         // Let the owner move the cube around with the arrow keys
+#if UNITY_ANDROID
+        Vector3 direction = Vector3.right * DynamicJoystick.Horizontal;
+        transform.Rotate(0, direction.x, 0);
 
-        rb.AddRelativeForce(Vector3.forward * InputManager.Instance.refreshInputPkg.accelerate * dt * moveSpeed);
-        rb.AddRelativeTorque(new Vector3(InputManager.Instance.refreshInputPkg.yaw, InputManager.Instance.refreshInputPkg.pitch, 0) * dt * moveSpeed);
+        Vector3 acceleration = transform.forward * DynamicJoystick.Vertical;
+        rb.AddForce(acceleration * moveSpeed * dt, ForceMode.VelocityChange);
+
+        if (transform.rotation.x > -30f && transform.position.x < 30f)
+        {
+            Vector3 altitudeTilt = transform.forward * AltitudeJoystick.Vertical;
+            Debug.Log(altitudeTilt);
+            transform.Rotate(-altitudeTilt.z, 0, 0);
+        }
+#else
+            rb.AddRelativeForce(Vector3.forward * InputManager.Instance.refreshInputPkg.accelerate * dt * moveSpeed);
+            rb.AddRelativeTorque(new Vector3(InputManager.Instance.refreshInputPkg.yaw, InputManager.Instance.refreshInputPkg.pitch, 0) * dt * moveSpeed);
+        
+#endif
 
         // If we are the owner of the object we should send the new position
         // and rotation across the network for receivers to move to in the above code

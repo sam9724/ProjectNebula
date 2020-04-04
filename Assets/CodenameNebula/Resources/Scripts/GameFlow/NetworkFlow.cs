@@ -13,7 +13,8 @@ public class NetworkFlow : NetworkFlowBehavior
     // Start is called before the first frame update
     private bool _networkReady;
     //private PlayersInfo playersInfo;                // Added DKE
-
+    public GameObject Player1Canvas;
+    public GameObject Player2Canvas;
     private readonly Dictionary<uint, PilotBehavior> _playerObjects = new Dictionary<uint, PilotBehavior>();
     private readonly Dictionary<uint, GunnerBehavior> _gunObjects = new Dictionary<uint, GunnerBehavior>();
     void Start()
@@ -30,7 +31,14 @@ public class NetworkFlow : NetworkFlowBehavior
             c.networkObject.ownerNetworkId = networkObject.MyPlayerId;
             _playerObjects.Add(networkObject.MyPlayerId, c); //p.NetworkId
             c.transform.Find("PilotCamera").gameObject.SetActive(true);
+            Player1Canvas.SetActive(true);
+            Player2Canvas.SetActive(false);
+            //GameObject.FindGameObjectWithTag("Player1Camera").SetActive(true);
+            //Find("Player1Canvas").gameObject.SetActive(true);
+            //transform.Find("Player2Canvas").gameObject.SetActive(false);
+
             //c.transform.Find("PilotCamera").gameObject.tag = "MainCamera";
+
 
             NetworkManager.Instance.Networker.playerDisconnected += (player, sender) =>
             {
@@ -47,7 +55,8 @@ public class NetworkFlow : NetworkFlowBehavior
             _gunObjects.Add(networkObject.MyPlayerId, r);
             r.transform.Find("GunnerCamera").gameObject.SetActive(true);
             //r.transform.Find("GunnerCamera").gameObject.tag = "MainCamera";
-
+            Player2Canvas.SetActive(true);
+            Player1Canvas.SetActive(false);
             NetworkManager.Instance.InstantiateMothership(0, new Vector3(0, 0.55f, -5));
 
 
