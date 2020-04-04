@@ -9,19 +9,25 @@ public class Gunner : GunnerBehavior, IBasePlayer
     public bool StalkEnemy { get; set; }
     public CharacterStats CharStats { get; set; }
 
-    float rotateSpeed = 10;
+    float rotateSpeed = 20;
     public float gunCooldown = 1;
     float gunCounter;
 
     public Transform muzzle;
     public Vector3 target;
 
+    Transform gunBase;
+    Transform barrel;
+
+
     //required coz we don't control the spawning of networked objects in the scene.
     public void Start()
     {
         PlayerManager.Instance.gunner = this;
         transform.SetParent(PlayerManager.Instance.pilot.transform);
-        muzzle = transform.Find("Barrel/Muzzle"); //Base/ - for new prefab
+        gunBase = transform.Find("Base"); //Base/ - for new prefab
+        barrel = gunBase.Find("Barrel");
+        muzzle = barrel.Find("Muzzle");
     }
     public void Initialize()
     {
@@ -55,24 +61,27 @@ public class Gunner : GunnerBehavior, IBasePlayer
         // move this cube to the position/rotation dictated by the owner
         if (!networkObject.IsOwner)
         {
-            transform.rotation = networkObject.rotation;
+            gunBase.rotation = networkObject.baseRotation;
+            barrel.rotation = networkObject.barrelRotation;
             target = networkObject.target;
             return;
         }
 
         // Let the owner move the cube around with the arrow keys
 
-        transform.Rotate(new Vector3(InputManager.Instance.refreshInputPkg.gunYaw, InputManager.Instance.refreshInputPkg.gunPitch, 0)* rotateSpeed * dt);
+        gunBase.Rotate(new Vector3(0, InputManager.Instance.inputPkg.gunYaw, 0)* rotateSpeed * dt);
+        barrel.Rotate(new Vector3(-InputManager.Instance.inputPkg.gunPitch, 0, 0) * rotateSpeed * dt);
 
         // If we are the owner of the object we should send the new position
         // and rotation across the network for receivers to move to in the above code
-        networkObject.rotation = transform.rotation;
+        networkObject.baseRotation = gunBase.rotation;
+        networkObject.barrelRotation = barrel.rotation;
 
         // Note: Forge Networking takes care of only sending the delta, so there
         // is no need for you to do that manually
-        
+
         gunCounter += dt;
-        if (InputManager.Instance.refreshInputPkg.fire)
+        if (InputManager.Instance.inputPkg.fire)
         {
             if (gunCounter > gunCooldown)
             {
@@ -82,12 +91,11 @@ public class Gunner : GunnerBehavior, IBasePlayer
                     target = hit.point;
                     networkObject.target = target;
                     networkObject.SendRpc(RPC_SHOOT, Receivers.All);
-                    //ProjectileFactory.Instance.CreateProjectile(ProjectileFactory.ProjectileType.Rail, muzzle.position, target);
                 }
                 
             }
         }
     }
 
-    public override void Shoot(RpcArgs args) => ProjectileFactory.Instance.CreateProjectile(ProjectileFactory.ProjectileType.Rail, muzzle.position, target);
+    public override void Shoot(RpcArgs args) => ProjectileFactory.Instance.CreateProjectile(ProjectileFactory.ProjectileType.Rail, muzzle.position, target, 50);
 }

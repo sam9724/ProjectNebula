@@ -33,7 +33,7 @@ public class ProjectileFactory
         }
         else
         {
-            projectile = GameObject.Instantiate(prefabDict[pType.ToString()], pos, Quaternion.identity).GetComponent<Projectile>();
+            projectile = GameObject.Instantiate(prefabDict[pType.ToString()], pos, Quaternion.Euler(0,90,0)).GetComponent<Projectile>();
             //
             projectile.projType = pType;
         }

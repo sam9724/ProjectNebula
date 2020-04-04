@@ -13,7 +13,7 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable
     public float boost;
     float boostCooldown;
 
-    float moveSpeed = 10;
+    float moveSpeed = 50;
 
     public Rigidbody rb;
 
@@ -22,13 +22,11 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable
     DynamicJoystick DynamicJoystick;
     DynamicJoystick AltitudeJoystick;
 
-
     //required coz we don't control the spawning of networked objects in the scene.
     public void Start()
     {
-        
         PlayerManager.Instance.pilot = this;
-        gunnerSpawnPos = transform.Find("TurretSpawnLoc");
+        gunnerSpawnPos = transform.Find("P2SpawnPoint");
         rb = gameObject.GetComponent<Rigidbody>();
 
         DynamicJoystick = GameObject.FindGameObjectWithTag("dynamicjoystick").GetComponent<DynamicJoystick>();
@@ -37,18 +35,12 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable
     public void Initialize()
     {
 
-        //DynamicJoystick[] ds= GameObject.FindObjectsOfType<DynamicJoystick>();
-        //if(ds[0].CompareTag(""))
-        //{
-
-        //}
-
     }
 
     // Use this for initialization
     public void PostInitialize()
     {
-        
+
     }
 
     public void PhysicsRefresh()
@@ -92,9 +84,8 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable
             transform.Rotate(-altitudeTilt.z, 0, 0);
         }
 #else
-            rb.AddRelativeForce(Vector3.forward * InputManager.Instance.refreshInputPkg.accelerate * dt * moveSpeed);
-            rb.AddRelativeTorque(new Vector3(InputManager.Instance.refreshInputPkg.yaw, InputManager.Instance.refreshInputPkg.pitch, 0) * dt * moveSpeed);
-        
+        rb.AddRelativeForce(Vector3.forward * InputManager.Instance.inputPkg.throttle * dt * moveSpeed);
+        rb.AddRelativeTorque(new Vector3(InputManager.Instance.inputPkg.pitch, InputManager.Instance.inputPkg.yaw, 0) * dt * moveSpeed);
 #endif
 
         // If we are the owner of the object we should send the new position

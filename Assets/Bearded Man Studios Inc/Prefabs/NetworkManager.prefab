@@ -49,13 +49,13 @@ MonoBehaviour:
   ExampleProximityPlayerNetworkObject:
   - {fileID: 1000012738253334, guid: feb25ecf90a8d8b4ab922a455249997b, type: 3}
   GunnerNetworkObject:
-  - {fileID: 2333843482167835681, guid: 0d99fd23b5920e84384f2f3c935f257c, type: 3}
+  - {fileID: 5042675065897102564, guid: c0e714af7a3471a48b7692606963ad54, type: 3}
   NetworkCameraNetworkObject:
   - {fileID: 139536, guid: 661f29f0c0c86fa47b6015bd602d0ac6, type: 3}
   NetworkFlowNetworkObject:
   - {fileID: 7888040919448224287, guid: 1d4efde4fe0ace04a9e5bfadea048c68, type: 3}
   PilotNetworkObject:
-  - {fileID: 4462340153135434786, guid: 9fe7aa1bd361f964b95bb05f2b27fd0a, type: 3}
+  - {fileID: 1152354105411914, guid: cdbec52167efb6a48b63cebb3284c246, type: 3}
   Player1PositionNetworkObject: []
   TestNetworkObject: []
   MothershipNetworkObject:

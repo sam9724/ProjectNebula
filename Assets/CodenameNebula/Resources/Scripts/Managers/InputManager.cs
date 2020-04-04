@@ -11,8 +11,8 @@ public class InputManager : IManagable
     public static InputManager Instance { get { return instance ?? (instance = new InputManager()); } }
     #endregion
 
-    public InputPkg refreshInputPkg = new InputPkg();
-    public InputPkg physicsRefreshInputPkg = new InputPkg();
+    public InputPkg inputPkg = new InputPkg();
+    public InputPkg physicsInputPkg = new InputPkg();
 
     public void Initialize()
     {
@@ -21,12 +21,12 @@ public class InputManager : IManagable
 
     public void PhysicsRefresh()
     {
-        SetInputPkg(physicsRefreshInputPkg);
+        SetInputPkg(physicsInputPkg);
     }
 
     public void Refresh()
     {
-        SetInputPkg(refreshInputPkg);
+        SetInputPkg(inputPkg);
     }
 
     private void SetInputPkg(InputPkg ip)
@@ -36,16 +36,15 @@ public class InputManager : IManagable
         //mobile controls to be implemented
 #else
         //ship
-        ip.yaw = Input.GetAxis("Mouse Y");
-        ip.pitch = Input.GetAxis("Horizontal");
-        //ip.roll = Input.GetAxis("Horizontal");
-        ip.accelerate = Input.GetAxis("Vertical");
+        ip.yaw = Input.GetAxis("Horizontal");
+        ip.pitch = Input.GetAxis("Vertical");
+        ip.roll = -Input.GetAxis("Horizontal") * 0.5f;
+        UpdateKeyboardThrottle(KeyCode.LeftShift, ip);
 
-        ip.hyperDrive = Input.GetMouseButton(0);
+        ip.hyperDrive = Input.GetKey(KeyCode.Space);
 
         // gun
-        ip.gunYaw = Input.GetAxis("Mouse Y");
-        ip.gunPitch = Input.GetAxis("Mouse X");
+        UpdateGunMovement(ip);
 
         ip.fire = Input.GetMouseButton(0);
 #endif
@@ -65,7 +64,7 @@ public class InputManager : IManagable
         public float yaw;
         public float pitch;
         public float roll;
-        public float accelerate;
+        public float throttle;
 
         public bool hyperDrive;
 
@@ -76,5 +75,27 @@ public class InputManager : IManagable
         public bool fire;
     }
 
+    void UpdateKeyboardThrottle(KeyCode increaseKey, InputPkg ip)
+    {
+        if (Input.GetKey(increaseKey))
+            ip.throttle += 50f;
+        else
+            ip.throttle -= 10f;
 
+        ip.throttle = Mathf.Clamp(ip.throttle, 0.0f, 500);
+    }
+
+    void UpdateGunMovement(InputPkg ip)
+    {
+        Vector3 mousePos = Input.mousePosition;
+
+        // Figure out most position relative to center of screen.
+        // (0, 0) is center, (-1, -1) is bottom left, (1, 1) is top right.      
+        ip.gunPitch = (mousePos.y - (Screen.height * 0.5f)) / (Screen.height * 0.5f);
+        ip.gunYaw = (mousePos.x - (Screen.width * 0.5f)) / (Screen.width * 0.5f);
+
+        // Make sure the values don't exceed limits.
+        ip.gunPitch = -Mathf.Clamp(ip.gunPitch, -1.0f, 1.0f);
+        ip.gunYaw = Mathf.Clamp(ip.gunYaw, -1.0f, 1.0f);
+    }
 }

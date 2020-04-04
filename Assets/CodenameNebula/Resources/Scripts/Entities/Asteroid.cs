@@ -10,7 +10,8 @@ public class Asteroid : MonoBehaviour, IDamagable, IManagable
 
     public void TakeDamage(float damage)
     {
-        //to be implemented;
+        //temp
+        GameObject.Destroy(gameObject);
     }
 
     // Use this for initialization

@@ -39,6 +39,10 @@ namespace BeardedManStudios.Forge.Networking.Generated
 						availableCallback = true;
 						obj = new GunnerNetworkObject(networker, id, frame);
 						break;
+					case MothershipNetworkObject.IDENTITY:
+						availableCallback = true;
+						obj = new MothershipNetworkObject(networker, id, frame);
+						break;
 					case NetworkCameraNetworkObject.IDENTITY:
 						availableCallback = true;
 						obj = new NetworkCameraNetworkObject(networker, id, frame);
@@ -58,10 +62,6 @@ namespace BeardedManStudios.Forge.Networking.Generated
 					case TestNetworkObject.IDENTITY:
 						availableCallback = true;
 						obj = new TestNetworkObject(networker, id, frame);
-						break;
-					case MothershipNetworkObject.IDENTITY:
-						availableCallback = true;
-						obj = new MothershipNetworkObject(networker, id, frame);
 						break;
 				}
 

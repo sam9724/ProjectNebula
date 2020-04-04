@@ -15,11 +15,12 @@ public class NetworkFlow : NetworkFlowBehavior
     //private PlayersInfo playersInfo;                // Added DKE
     public GameObject Player1Canvas;
     public GameObject Player2Canvas;
+
     private readonly Dictionary<uint, PilotBehavior> _playerObjects = new Dictionary<uint, PilotBehavior>();
     private readonly Dictionary<uint, GunnerBehavior> _gunObjects = new Dictionary<uint, GunnerBehavior>();
     void Start()
     {
-        
+
     }
     protected override void NetworkStart()
     {
@@ -27,18 +28,12 @@ public class NetworkFlow : NetworkFlowBehavior
 
         if (NetworkManager.Instance.IsServer)
         {
-            PilotBehavior c = NetworkManager.Instance.InstantiatePilot(0, new Vector3(0, 0.55f, 0));    // Changed DKE to include index and start position
+            PilotBehavior c = NetworkManager.Instance.InstantiatePilot(0, Vector3.zero);    // Changed DKE to include index and start position
             c.networkObject.ownerNetworkId = networkObject.MyPlayerId;
-            _playerObjects.Add(networkObject.MyPlayerId, c); //p.NetworkId
+            _playerObjects.Add(networkObject.MyPlayerId, c);
             c.transform.Find("PilotCamera").gameObject.SetActive(true);
             Player1Canvas.SetActive(true);
             Player2Canvas.SetActive(false);
-            //GameObject.FindGameObjectWithTag("Player1Camera").SetActive(true);
-            //Find("Player1Canvas").gameObject.SetActive(true);
-            //transform.Find("Player2Canvas").gameObject.SetActive(false);
-
-            //c.transform.Find("PilotCamera").gameObject.tag = "MainCamera";
-
 
             NetworkManager.Instance.Networker.playerDisconnected += (player, sender) =>
             {
@@ -50,14 +45,14 @@ public class NetworkFlow : NetworkFlowBehavior
         }
         else
         {
-            GunnerBehavior r = NetworkManager.Instance.InstantiateGunner(0, PlayerManager.Instance.pilot.gunnerSpawnPos.position);    //, new Vector3(0, 0, 2) Changed DKE to include index and start position
+            GunnerBehavior r = NetworkManager.Instance.InstantiateGunner(0, PlayerManager.Instance.pilot.gunnerSpawnPos.position, Quaternion.Euler(0, 180, 0));    //, new Vector3(0, 0, 2) Changed DKE to include index and start position
             r.networkObject.ownerNetworkId = networkObject.MyPlayerId;
             _gunObjects.Add(networkObject.MyPlayerId, r);
-            r.transform.Find("GunnerCamera").gameObject.SetActive(true);
-            //r.transform.Find("GunnerCamera").gameObject.tag = "MainCamera";
+            r.transform.Find("Base/GunnerCamera").gameObject.SetActive(true);
             Player2Canvas.SetActive(true);
             Player1Canvas.SetActive(false);
-            NetworkManager.Instance.InstantiateMothership(0, new Vector3(0, 0.55f, -5));
+
+            NetworkManager.Instance.InstantiateMothership(0, Vector3.forward * -5);
 
 
             NetworkManager.Instance.Networker.playerDisconnected += (player, sender) =>
@@ -66,7 +61,7 @@ public class NetworkFlow : NetworkFlowBehavior
                 GunnerBehavior rr = _gunObjects[player.NetworkId];
                 _gunObjects.Remove(player.NetworkId);
                 rr.networkObject.Destroy();
-            }; 
+            };
         }
 
         _networkReady = true;
