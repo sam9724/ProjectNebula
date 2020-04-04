@@ -20,6 +20,7 @@ public class GameFlow
         PlayerManager.Instance.Initialize();
         EnemyManager.Instance.Initialize();
         ProjectileManager.Instance.Initialize();
+        AstroidManager.Instance.Initialize();
     }
 
     public void PostInitialize()
