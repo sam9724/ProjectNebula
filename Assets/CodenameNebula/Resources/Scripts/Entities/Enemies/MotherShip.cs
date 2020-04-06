@@ -62,6 +62,7 @@ public class MotherShip : MothershipBehavior, IBaseEnemy
         MotherShipClass.zMin = zMin;
         MotherShipClass.zMax = zMax;
 
+        EnemyManager.Instance.mothership = this;
         IsAlive = true;
         CharStats = new CharacterStats(100, 0);
 

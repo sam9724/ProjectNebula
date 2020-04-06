@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-public class ProjectileManager : MonoBehaviour
+public class ProjectileManager 
 {
     #region Singleton
     private static ProjectileManager instance;
@@ -11,6 +11,8 @@ public class ProjectileManager : MonoBehaviour
     public static ProjectileManager Instance { get { return instance ?? (instance = new ProjectileManager()); } }
     #endregion
 
+    public Stack<Projectile> toRemove;
+    public Stack<Projectile> toAdd;
     public HashSet<Projectile> projectiles;
     public Transform projParent;
     
@@ -27,6 +29,8 @@ public class ProjectileManager : MonoBehaviour
     public void Initialize()
     {
         projectiles = new HashSet<Projectile>();
+        toRemove = new Stack<Projectile>();
+        toAdd = new Stack<Projectile>();
         projParent = new GameObject("ProjParent").transform;
         pooledBulletParent = new GameObject("DeadProj").transform;
     }
@@ -44,6 +48,12 @@ public class ProjectileManager : MonoBehaviour
             p.Refresh(dt);
         }
 
+        while (toRemove.Count > 0)
+            projectiles.Remove(toRemove.Pop());
+
+        while (toAdd.Count > 0)
+            projectiles.Add(toAdd.Pop());
+
         //Fire(dt);
     }
 
@@ -55,7 +65,7 @@ public class ProjectileManager : MonoBehaviour
 
     public void ProjectileDied(Projectile p)
     {
-        projectiles.Remove(p);
+        toRemove.Push(p);
         p.transform.SetParent(pooledBulletParent);
         GenericObjectPool.Instance.PoolObject(p.projType.GetType(), p);
     }
