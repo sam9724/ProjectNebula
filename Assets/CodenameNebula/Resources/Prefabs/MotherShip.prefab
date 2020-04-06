@@ -193,7 +193,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f50f2f0f4a4548943844fe1fb4494e13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerDetectionRange: 400
+  playerDetectionRange: 625
   rotateSpeed: 0.15
   MovementSpeed: 4
   idleMovement: 0.005
