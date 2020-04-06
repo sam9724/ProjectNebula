@@ -20,7 +20,7 @@ public class EnemyManager
     Transform MinionsSpawnLocation;
     Dictionary<EnemyType, GameObject> enemyPrefabDict = new Dictionary<EnemyType, GameObject>(); //all enemy prefabs
 
-    MotherShip mothership;
+    public MotherShip mothership;
 
     public void Initialize()
     {
