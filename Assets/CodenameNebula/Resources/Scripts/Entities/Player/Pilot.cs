@@ -3,7 +3,7 @@ using System.Collections;
 using BeardedManStudios.Forge.Networking.Generated;
 
 
-public class Pilot : PilotBehavior, IBasePlayer, IDamagable
+public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
 {
 
     public float ShieldCooldown { get; set; }
@@ -14,6 +14,15 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable
     float boostCooldown;
 
     float moveSpeed = 50;
+
+    float maxHealth;
+    float maxShield;
+    float healthRegen = 2;
+    bool isUnderAttack = false;
+    float underAttackTimerCounter;
+    float regenCooldown = 10;
+
+    float shieldRegen = 5;
 
     public Rigidbody rb;
 
@@ -31,6 +40,10 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable
 
         DynamicJoystick = GameObject.FindGameObjectWithTag("dynamicjoystick").GetComponent<DynamicJoystick>();
         AltitudeJoystick = GameObject.FindGameObjectWithTag("Altitude").GetComponent<DynamicJoystick>();
+        CharStats = new CharacterStats();
+        maxHealth = CharStats.health;
+        maxShield = CharStats.shield;
+        ShieldCooldown = 5;
     }
     public void Initialize()
     {
@@ -95,15 +108,57 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable
 
         // Note: Forge Networking takes care of only sending the delta, so there
         // is no need for you to do that manually
+
+        if (underAttackTimerCounter >= regenCooldown)
+        {
+            RegenHP(dt);
+            RegenShield(dt);
+        }
+            
     }
 
     public void TakeDamage(float damage)
     {
-        //to be implemented
+        isUnderAttack = true;
+        if (CharStats.shield > 0)
+        {
+            TakeShieldDamage(damage * 2);
+            return;
+        }
+        CharStats.health -= damage;
+        underAttackTimerCounter = 0;
+
+        if (CharStats.health <= 0)
+            Die();
     }
 
     public void Die()
     {
         //to be implemented
+    }
+
+    public void TakeShieldDamage(float damage)
+    {
+        CharStats.shield -= damage;
+        if (CharStats.shield <= 0)
+            BreakShield();
+    }
+
+    public void BreakShield()
+    {
+        //to be implemented
+    }
+
+    public void RegenHP(float dt)
+    {
+        isUnderAttack = false;
+        if (CharStats.health < maxHealth)
+            CharStats.health = Mathf.Clamp(CharStats.health += healthRegen * dt, 0, maxHealth);  
+    }
+
+    public void RegenShield(float dt)
+    {
+        if (CharStats.shield < maxShield)
+            CharStats.shield = Mathf.Clamp(CharStats.shield += shieldRegen * dt, 0, maxShield);
     }
 }

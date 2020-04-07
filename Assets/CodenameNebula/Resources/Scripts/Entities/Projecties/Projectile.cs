@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Projectile : MonoBehaviour, IPoolable
+public abstract class Projectile : MonoBehaviour, IPoolable
 {
 
     public ProjectileFactory.ProjectileType projType;
@@ -58,4 +58,6 @@ public class Projectile : MonoBehaviour, IPoolable
             Destroy(explosion, 1f);
         }
     }*/
+
+    protected abstract void HitTarget(IDamagable targetHit, string layerName);
 }

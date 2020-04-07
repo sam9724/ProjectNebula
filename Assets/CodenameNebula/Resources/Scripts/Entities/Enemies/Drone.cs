@@ -48,11 +48,16 @@ public class Drone : MonoBehaviour, IMinion
         
     }
 
+    public void RegenHP(float dt)
+    {
+        //throw new System.NotImplementedException();
+    }
+
     public void TakeDamage()
     {
         //to be implemented
     }
-
+    
     public void TakeDamage(float damage)
     {
         //throw new System.NotImplementedException();

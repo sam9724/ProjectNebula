@@ -29,6 +29,7 @@ public class Gunner : GunnerBehavior, IBasePlayer
         gunBase = transform.Find("Base"); //Base/ - for new prefab
         barrel = gunBase.Find("Barrel");
         muzzle = barrel.Find("Muzzle");
+        CharStats = new CharacterStats();
     }
     public void Initialize()
     {

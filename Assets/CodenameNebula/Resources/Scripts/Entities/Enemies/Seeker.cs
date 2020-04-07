@@ -48,6 +48,11 @@ public class Seeker : MonoBehaviour, IMinion
         
     }
 
+    public void RegenHP(float dt)
+    {
+        //throw new System.NotImplementedException();
+    }
+
     public void TakeDamage()
     {
         
