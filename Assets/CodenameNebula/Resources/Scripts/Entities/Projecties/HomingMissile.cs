@@ -36,4 +36,9 @@ public class HomingMissile : Projectile, IDamagable // Since Homing missiles can
     {
         //not required
     }
+
+    protected override void Explode()
+    {
+        // Explosion effect goes here.
+    }
 }

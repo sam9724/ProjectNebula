@@ -9,13 +9,22 @@ public class Gunner : GunnerBehavior, IBasePlayer
     public bool StalkEnemy { get; set; }
     public CharacterStats CharStats { get; set; }
 
-    float rotateSpeed = 20;
-     Gyroscope gryo;
-    public float gunCooldown = 1;
+    float rotateSpeed = 2;
+    Gyroscope gryo;
+    [HideInInspector]
+    public float gunCooldown = 0.1f;
+    [HideInInspector]
+    public float gunRange = 1000;
+    [HideInInspector]
+    public float maxGunHeat = 4; // max continuous fire allowed 4 sec
+    public float currentGunHeat = 0;
     float gunCounter;
-
+    [HideInInspector]
     public Transform muzzle;
+    [HideInInspector]
     public Vector3 target;
+    [HideInInspector]
+    public float bulletSpeed = 1000;
 
     Transform gunBase;
     Transform barrel;
@@ -71,7 +80,7 @@ public class Gunner : GunnerBehavior, IBasePlayer
 
         // Let the owner move the cube around with the arrow keys
 
-        
+
 
 #if UNITY_ANDROID
         gryo = Input.gyro;
@@ -91,22 +100,22 @@ public class Gunner : GunnerBehavior, IBasePlayer
         // Note: Forge Networking takes care of only sending the delta, so there
         // is no need for you to do that manually
 
-        gunCounter += dt;
-        if (InputManager.Instance.inputPkg.fire)
+        //gunCounter += dt;
+        if (InputManager.Instance.inputPkg.fire /*&& gunCounter > gunCooldown*/ && currentGunHeat < maxGunHeat)
         {
-            if (gunCounter > gunCooldown)
-            {
-                if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, Mathf.Infinity))
-                {
-                    gunCounter = 0;
-                    target = hit.point;
-                    networkObject.target = target;
-                    networkObject.SendRpc(RPC_SHOOT, Receivers.All);
-                }
-                
-            }
+            currentGunHeat += dt;
+            gunCounter = 0;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    
+            target = ray.GetPoint(gunRange);
+            networkObject.target = target;
+            networkObject.SendRpc(RPC_SHOOT, Receivers.All);
+        }
+        else
+        {
+            currentGunHeat -= dt;
         }
     }
 
-    public override void Shoot(RpcArgs args) => ProjectileFactory.Instance.CreateProjectile(ProjectileFactory.ProjectileType.Rail, muzzle.position, target, 50);
+    public override void Shoot(RpcArgs args) => ProjectileFactory.Instance.CreateProjectile(ProjectileFactory.ProjectileType.Rail, muzzle.position, target, Quaternion.identity, bulletSpeed);
 }
