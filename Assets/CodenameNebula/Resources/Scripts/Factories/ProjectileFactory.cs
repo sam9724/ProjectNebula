@@ -21,7 +21,7 @@ public class ProjectileFactory
         prefabDict = Resources.LoadAll<GameObject>("Prefabs/Projectiles/").ToDictionary(x => x.name);
     }
 
-    public Projectile CreateProjectile(ProjectileType pType, Vector3 pos, Vector3 target, float speed = 10)
+    public Projectile CreateProjectile(ProjectileType pType, Vector3 pos, Vector3 target, Quaternion rot, float speed)
     {
         Projectile projectile;
 
@@ -29,12 +29,12 @@ public class ProjectileFactory
         {
             projectile = (poolable as Projectile);
             projectile.transform.position = pos;
+            projectile.transform.rotation = rot;
             projectile.gameObject.SetActive(true);
         }
         else
         {
-            projectile = GameObject.Instantiate(prefabDict[pType.ToString()], pos, Quaternion.Euler(0,90,0)).GetComponent<Projectile>();
-            //
+            projectile = GameObject.Instantiate(prefabDict[pType.ToString()], pos, rot).GetComponent<Projectile>();
             projectile.projType = pType;
         }
         projectile.Initialize();

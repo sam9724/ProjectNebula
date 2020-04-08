@@ -48,7 +48,7 @@ public class NetworkFlow : NetworkFlowBehavior
             GunnerBehavior r = NetworkManager.Instance.InstantiateGunner(0, PlayerManager.Instance.pilot.gunnerSpawnPos.position, Quaternion.Euler(0, 180, 0));    //, new Vector3(0, 0, 2) Changed DKE to include index and start position
             r.networkObject.ownerNetworkId = networkObject.MyPlayerId;
             _gunObjects.Add(networkObject.MyPlayerId, r);
-            r.transform.Find("Base/GunnerCamera").gameObject.SetActive(true);
+            r.transform.Find("Base/Barrel/GunnerCamera").gameObject.SetActive(true);
             Player2Canvas.SetActive(true);
             Player1Canvas.SetActive(false);
 

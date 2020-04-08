@@ -35,4 +35,9 @@ public class Asteroid : MonoBehaviour, IDamagable, IManagable
     {
         
     }
+
+    public void RegenHP(float dt)
+    {
+        //not required
+    }
 }

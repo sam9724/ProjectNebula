@@ -22,6 +22,9 @@ public class CharacterStats
 
     public CharacterStats() { health = 200; shield = 100; }
 
+    /// <summary>Initialize Stats</summary>
+    /// <param name="hp">HP of the character</param>
+    /// <param name="shield">Shield of the character</param>
     public CharacterStats(float hp, float shield)
     {
         this.health = hp;

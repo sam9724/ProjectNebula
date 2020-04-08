@@ -9,16 +9,32 @@ public class Gunner : GunnerBehavior, IBasePlayer
     public bool StalkEnemy { get; set; }
     public CharacterStats CharStats { get; set; }
 
-    float rotateSpeed = 20;
-     Gyroscope gryo;
-    public float gunCooldown = 1;
+    float rotateSpeed = 2;
+    [HideInInspector]
+    public float gunCooldown = 0.1f;
+    [HideInInspector]
+    public float gunRange = 1000;
+    [HideInInspector]
+    public float maxGunHeat = 4; // max continuous fire allowed 4 sec
+    public float currentGunHeat = 0;
     float gunCounter;
-
+    [HideInInspector]
     public Transform muzzle;
+    [HideInInspector]
     public Vector3 target;
+    [HideInInspector]
+    public float bulletSpeed = 1000;
 
     Transform gunBase;
     Transform barrel;
+
+    bool gunOverheat = false;
+
+    Vector3 previousGyroEuler;
+    float gyroXsensitivity = 0.2f;
+    float gyroYsensitivity = 0.2f;
+    float barrelZoffset = 180;
+    float barrelXoffset = 30;
 
 
     //required coz we don't control the spawning of networked objects in the scene.
@@ -29,6 +45,10 @@ public class Gunner : GunnerBehavior, IBasePlayer
         gunBase = transform.Find("Base"); //Base/ - for new prefab
         barrel = gunBase.Find("Barrel");
         muzzle = barrel.Find("Muzzle");
+        CharStats = new CharacterStats();
+        previousGyroEuler = DeviceRotation.Get().eulerAngles;
+        //offset
+        barrel.transform.rotation = Quaternion.Euler(barrel.transform.rotation.eulerAngles.x + barrelXoffset, barrel.transform.rotation.eulerAngles.y, barrel.transform.rotation.eulerAngles.z);
     }
     public void Initialize()
     {
@@ -70,17 +90,16 @@ public class Gunner : GunnerBehavior, IBasePlayer
 
         // Let the owner move the cube around with the arrow keys
 
-        
+
 
 #if UNITY_ANDROID
-        gryo = Input.gyro;
-        gryo.enabled = true;
-       // transform.localRotation = gryo.attitude * new Quaternion(0,0,1,0);
-        gunBase.Rotate(new Vector3(0, gryo.attitude.eulerAngles.x , 0)* rotateSpeed * dt);
-        barrel.Rotate(new Vector3(-gryo.attitude.eulerAngles.y, 0, 0) * rotateSpeed * dt);
+        Vector3 delta = CalculateGyroDelta();
+        gunBase.rotation = Quaternion.Euler(0, gunBase.rotation.eulerAngles.y - delta.y, 0);
+        barrel.rotation = Quaternion.Euler(barrel.rotation.eulerAngles.x - delta.x, gunBase.rotation.eulerAngles.y - delta.y, barrelZoffset);
+
 #else
-        gunBase.Rotate(new Vector3(0, InputManager.Instance.inputPkg.gunYaw, 0)* rotateSpeed * dt);
-        barrel.Rotate(new Vector3(-InputManager.Instance.inputPkg.gunPitch, 0, 0) * rotateSpeed * dt);
+        gunBase.Rotate(new Vector3(0, Mathf.Clamp(InputManager.Instance.inputPkg.gunYaw, 0, 36), 0)* rotateSpeed * dt);
+        barrel.Rotate(new Vector3(-Mathf.Clamp(InputManager.Instance.inputPkg.gunPitch, 0, 36), 0, 0) * rotateSpeed * dt);
 #endif
         // If we are the owner of the object we should send the new position
         // and rotation across the network for receivers to move to in the above code
@@ -90,22 +109,43 @@ public class Gunner : GunnerBehavior, IBasePlayer
         // Note: Forge Networking takes care of only sending the delta, so there
         // is no need for you to do that manually
 
-        gunCounter += dt;
-        if (InputManager.Instance.inputPkg.fire)
+        //gunCounter += dt;
+        if (InputManager.Instance.inputPkg.fire /*&& gunCounter > gunCooldown*/ && !gunOverheat)
         {
-            if (gunCounter > gunCooldown)
-            {
-                if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, Mathf.Infinity))
-                {
-                    gunCounter = 0;
-                    target = hit.point;
-                    networkObject.target = target;
-                    networkObject.SendRpc(RPC_SHOOT, Receivers.All);
-                }
-                
-            }
+            currentGunHeat += dt;
+            gunCounter = 0;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    
+            target = ray.GetPoint(gunRange);
+            networkObject.target = target;
+            networkObject.SendRpc(RPC_SHOOT, Receivers.All);
         }
+        else
+        {
+            currentGunHeat -= dt;
+        }
+        currentGunHeat = Mathf.Clamp(currentGunHeat, 0, 4);
+        if (currentGunHeat >= maxGunHeat)
+            gunOverheat = true;
+        else if(currentGunHeat <= 0)
+            gunOverheat = false;
     }
 
-    public override void Shoot(RpcArgs args) => ProjectileFactory.Instance.CreateProjectile(ProjectileFactory.ProjectileType.Rail, muzzle.position, target, 50);
+    public override void Shoot(RpcArgs args) => ProjectileFactory.Instance.CreateProjectile(ProjectileFactory.ProjectileType.Rail, muzzle.position, target, Quaternion.identity, bulletSpeed);
+
+    Vector3 CalculateGyroDelta()
+    {
+        Vector3 deviceEulers = DeviceRotation.Get().eulerAngles;
+        Vector3 deltaEulers = previousGyroEuler - deviceEulers;
+        Debug.Log("Delta : " + deltaEulers);
+        previousGyroEuler = deviceEulers;
+
+        if (Mathf.Abs(deltaEulers.x) < gyroXsensitivity)
+            deltaEulers.x = 0;
+
+        if (Mathf.Abs(deltaEulers.y) < gyroYsensitivity)
+            deltaEulers.y = 0;
+
+        return new Vector3(Mathf.Clamp(deltaEulers.x, -10f, 10f), Mathf.Clamp(deltaEulers.y, -10f, 10f));
+    }
 }

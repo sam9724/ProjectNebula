@@ -17,9 +17,11 @@ public class GameFlow
         //UIManager.Instance.Initialize();
         //InputManager.Instance.Initialize();
         ProjectileFactory.Instance.Initialize();
+        ParticleFactory.Instance.Initialize();
         PlayerManager.Instance.Initialize();
         EnemyManager.Instance.Initialize();
         ProjectileManager.Instance.Initialize();
+        ParticleManager.Instance.Initialize();
         AstroidManager.Instance.Initialize();
     }
 
@@ -48,6 +50,7 @@ public class GameFlow
         PlayerManager.Instance.Refresh(dt);
         EnemyManager.Instance.Refresh(dt);
         ProjectileManager.Instance.Refresh(dt);
+        ParticleManager.Instance.Refresh(dt);
 
     }
 

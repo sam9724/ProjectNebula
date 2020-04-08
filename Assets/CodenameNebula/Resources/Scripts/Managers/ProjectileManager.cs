@@ -19,12 +19,8 @@ public class ProjectileManager
     public Transform spawnLocation;
     public Vector3 spawnDirection;
 
-    public Transform pooledBulletParent;
+    public Transform pooledProjParent;
 
-    bool shoot = true;
-
-    float timer = 0;
-    float cooldown = 1;
 
     public void Initialize()
     {
@@ -32,12 +28,12 @@ public class ProjectileManager
         toRemove = new Stack<Projectile>();
         toAdd = new Stack<Projectile>();
         projParent = new GameObject("ProjParent").transform;
-        pooledBulletParent = new GameObject("DeadProj").transform;
+        pooledProjParent = new GameObject("DeadProj").transform;
     }
 
     public void PostInitialize()
     {
-        //shoot = true;
+
     }
 
 
@@ -53,8 +49,6 @@ public class ProjectileManager
 
         while (toAdd.Count > 0)
             projectiles.Add(toAdd.Pop());
-
-        //Fire(dt);
     }
 
 
@@ -66,7 +60,7 @@ public class ProjectileManager
     public void ProjectileDied(Projectile p)
     {
         toRemove.Push(p);
-        p.transform.SetParent(pooledBulletParent);
+        p.transform.SetParent(pooledProjParent);
         GenericObjectPool.Instance.PoolObject(p.projType.GetType(), p);
     }
 }

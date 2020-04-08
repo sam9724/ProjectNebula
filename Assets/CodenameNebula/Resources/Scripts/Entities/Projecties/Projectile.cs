@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Projectile : MonoBehaviour, IPoolable
+public abstract class Projectile : MonoBehaviour, IPoolable
 {
 
     public ProjectileFactory.ProjectileType projType;
     public Vector3 target;
     public float speed = 10;
+    float maxDistRayCast = 2;
     //public GameObject collisionExplosion;
 
     public virtual void Initialize()
@@ -33,9 +34,17 @@ public class Projectile : MonoBehaviour, IPoolable
     {
         if (target != null)
         {
-            if (transform.position == target)
+            if (Physics.Raycast(transform.position, target, out RaycastHit hit, maxDistRayCast))
             {
-                //Explode();
+                if (hit.transform.gameObject.TryGetComponent(out IDamagable d))
+                    HitTarget(d, LayerMask.LayerToName(hit.transform.gameObject.layer));
+                Explode();
+                Died();
+                return;
+            } 
+            else if(transform.position == target)
+            {
+                Explode();
                 Died();
                 return;
             }
@@ -49,13 +58,7 @@ public class Projectile : MonoBehaviour, IPoolable
         ProjectileManager.Instance.ProjectileDied(this);
     }
 
-    /*protected virtual void Explode()
-    {
-        if (collisionExplosion != null)
-        {
-            GameObject explosion = Instantiate<GameObject>(collisionExplosion, transform.position, transform.rotation);
-            Destroy(gameObject);
-            Destroy(explosion, 1f);
-        }
-    }*/
+    protected abstract void Explode();
+
+    protected abstract void HitTarget(IDamagable targetHit, string layerName);
 }

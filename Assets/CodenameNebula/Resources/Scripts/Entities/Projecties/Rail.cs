@@ -3,8 +3,9 @@ using System.Collections;
 
 public class Rail : Projectile
 {
-
+    float railDamage = 5;
     // Use this for initialization
+
     public override void Initialize()
     {
         base.Initialize();
@@ -24,4 +25,12 @@ public class Rail : Projectile
     {
         base.Refresh(dt);
     }
+
+    protected override void HitTarget(IDamagable targetHit, string layerName)
+    {
+        if(layerName == "Enemy" || layerName == "Asteroid")
+            targetHit.TakeDamage(railDamage);
+    }
+
+    protected override void Explode() => ParticleFactory.Instance.CreateParticle(ParticleFactory.ParticleType.RailExplosion, transform.position, transform.rotation);
 }

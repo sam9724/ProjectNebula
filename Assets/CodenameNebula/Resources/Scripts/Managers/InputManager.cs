@@ -14,9 +14,13 @@ public class InputManager : IManagable
     public InputPkg inputPkg = new InputPkg();
     public InputPkg physicsInputPkg = new InputPkg();
 
+    Vector3 previousGyroEuler;
+    float gyroXsensitivity = 10;
+    float gyroYsensitivity = 10;
+
     public void Initialize()
     {
-
+        //previousGyroEuler = DeviceRotation.Get().eulerAngles;
     }
 
     public void PhysicsRefresh()
@@ -33,7 +37,7 @@ public class InputManager : IManagable
     {
 #if UNITY_ANDROID
 
-        //mobile controls to be implemented
+        //UpdateGyroInput(ip);
 #else
         //ship
         ip.yaw = Input.GetAxis("Horizontal");
@@ -97,5 +101,22 @@ public class InputManager : IManagable
         // Make sure the values don't exceed limits.
         ip.gunPitch = -Mathf.Clamp(ip.gunPitch, -1.0f, 1.0f);
         ip.gunYaw = Mathf.Clamp(ip.gunYaw, -1.0f, 1.0f);
+    }
+
+    void UpdateGyroInput(InputPkg ip)
+    {
+        Vector3 deviceEulers = DeviceRotation.Get().eulerAngles;
+        Vector3 deltaEulers = previousGyroEuler - deviceEulers;
+        previousGyroEuler = deviceEulers;
+
+        //if (deltaEulers.x > gyroXsensitivity)
+            ip.gunPitch = deltaEulers.x;
+        /*else
+            ip.gunPitch = 0;*/
+
+        //if (deltaEulers.y > gyroYsensitivity)
+            ip.gunYaw = deltaEulers.y;
+        /*else
+            ip.gunYaw = 0;*/
     }
 }

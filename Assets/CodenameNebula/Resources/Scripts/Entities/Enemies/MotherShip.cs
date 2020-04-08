@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class MotherShip : MothershipBehavior, IBaseEnemy
+public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
 {
     public bool ChasePlayer { get; set; }
     public bool Wander { get; set; }
@@ -97,7 +97,7 @@ public class MotherShip : MothershipBehavior, IBaseEnemy
             transform.rotation = networkObject.rotation;
             return;
         }*/
-        Debug.Log("player"+player.name);
+        //Debug.Log("player"+player.name);
 
         if (PlayerInRange())
         {
@@ -143,6 +143,25 @@ public class MotherShip : MothershipBehavior, IBaseEnemy
         //throw new System.NotImplementedException();
     }
 
+    public void RegenHP(float dt)
+    {
+        //throw new System.NotImplementedException();
+    }
+
+    public void TakeShieldDamage(float damage)
+    {
+        //throw new System.NotImplementedException();
+    }
+
+    public void BreakShield()
+    {
+        //throw new System.NotImplementedException();
+    }
+
+    public void RegenShield(float dt)
+    {
+        //throw new System.NotImplementedException();
+    }
+
     //AI Logic in state behavior scripts
 }
-

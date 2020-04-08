@@ -9,5 +9,6 @@ public interface IDamagable
 {
     void TakeDamage(float damage);
     void Die();
+    void RegenHP(float dt);
 }
 

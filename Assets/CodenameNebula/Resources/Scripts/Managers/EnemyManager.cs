@@ -35,7 +35,7 @@ public class EnemyManager
         {
             enemyPrefabDict.Add(etype, Resources.Load<GameObject>("Prefabs/Enemy/" + etype.ToString())); //Each enum matches the name of the enemy perfectly
         }
-        Debug.Log("enemyPrefabDict: "+enemyPrefabDict.Count);
+        //Debug.Log("enemyPrefabDict: "+enemyPrefabDict.Count);
     }
     //\Assets\CodenameNebula\Resources\Prefabs\Enemy
 
@@ -92,7 +92,7 @@ public class EnemyManager
         {
             GameObject newEnemy = GameObject.Instantiate(enemyPrefabDict[etype],enemyParent);
             newEnemy.transform.position += MotherShipClass.MinionsSpawnLocation.position;
-            Debug.Log("New Enemy Created");
+            //Debug.Log("New Enemy Created");
             e = newEnemy.GetComponent<IBaseEnemy>();
             e.Initialize();
             toAdd.Push(e);
