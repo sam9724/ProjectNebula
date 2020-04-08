@@ -35,11 +35,13 @@ public class MothershipChasing : StateMachineBehaviour
                 if(hit.collider.CompareTag("Player"))
                     {
                         Debug.Log("Call player Damage Function.");
+                        //GameObject.Destroy(hit.collider.gameObject);
+
                     }
                     else
                     {
                         Debug.Log("Destroy all the asteroids in middle");
-
+                        //GameObject.Destroy(hit.collider.gameObject);
                     }
                 }
             }

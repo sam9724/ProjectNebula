@@ -13,7 +13,7 @@ public class ProjectileFactory
 
     public Dictionary<string, GameObject> prefabDict;
     public enum ProjectileType { Rail, Laser, DestructionBeam, HomingMissile };
-
+    
     //static int bulletRecycleCount = 10;
 
     public void Initialize()

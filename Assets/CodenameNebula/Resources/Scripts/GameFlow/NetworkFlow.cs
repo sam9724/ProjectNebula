@@ -12,7 +12,7 @@ public class NetworkFlow : NetworkFlowBehavior
 {
     // Start is called before the first frame update
     private bool _networkReady;
-    //private PlayersInfo playersInfo;                // Added DKE
+    //private PlayersInfo playersInfo;                
     public GameObject Player1Canvas;
     public GameObject Player2Canvas;
 
