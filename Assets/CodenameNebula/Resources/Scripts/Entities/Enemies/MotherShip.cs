@@ -97,7 +97,7 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
             transform.rotation = networkObject.rotation;
             return;
         }*/
-        Debug.Log("player"+player.name);
+        //Debug.Log("player"+player.name);
 
         if (PlayerInRange())
         {

@@ -25,14 +25,11 @@ public class Laser : Projectile
         base.Refresh(dt);
     }
 
-    protected override void Explode()
-    {
-        ParticleFactory.Instance.CreateParticle(ParticleFactory.ParticleType.LaserExplosion, transform.position, transform.rotation);
-    }
-
     protected override void HitTarget(IDamagable targetHit, string layerName)
     {
         if (layerName == "Player" || layerName == "Asteroid")
             targetHit.TakeDamage(laserDamage);
     }
+
+    protected override void Explode() => ParticleFactory.Instance.CreateParticle(ParticleFactory.ParticleType.LaserExplosion, transform.position, transform.rotation);
 }

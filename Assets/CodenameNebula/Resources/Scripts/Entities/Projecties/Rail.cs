@@ -32,8 +32,5 @@ public class Rail : Projectile
             targetHit.TakeDamage(railDamage);
     }
 
-    protected override void Explode()
-    {
-        ParticleFactory.Instance.CreateParticle(ParticleFactory.ParticleType.RailExplosion, transform.position, transform.rotation);
-    }
+    protected override void Explode() => ParticleFactory.Instance.CreateParticle(ParticleFactory.ParticleType.RailExplosion, transform.position, transform.rotation);
 }
