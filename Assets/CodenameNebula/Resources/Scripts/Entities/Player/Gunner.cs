@@ -13,8 +13,8 @@ public class Gunner : GunnerBehavior, IBasePlayer
     float rotateSpeed = 2;
     [HideInInspector]
     public float gunCooldown = 0.1f;
-    
-    public float gunRange = 3000;
+    [HideInInspector]
+    public float gunRange = 100;
     [HideInInspector]
     public float maxGunHeat = 4; // max continuous fire allowed 4 sec
     public float currentGunHeat = 0;
@@ -23,8 +23,8 @@ public class Gunner : GunnerBehavior, IBasePlayer
     public Transform muzzle;
     [HideInInspector]
     public Vector3 target;
-
-    public float bulletSpeed = 300;
+    [HideInInspector]
+    public float bulletSpeed = 40;
 
     Transform gunBase;
     Transform barrel;
