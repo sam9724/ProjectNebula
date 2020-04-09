@@ -39,6 +39,8 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
     {
         //EnemyManager.Instance.EnemyDied(this);
         //isAlive = false;
+
+        //game win message
     }
 
     
@@ -122,7 +124,7 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
         CharStats.health -= damage;
         if (CharStats.health <= 0)
         {
-            Debug.Log("Hp: " + CharStats.health);
+            Debug.Log("Mothership Hp: " + CharStats.health);
             Die();
             IsAlive = false;
         }

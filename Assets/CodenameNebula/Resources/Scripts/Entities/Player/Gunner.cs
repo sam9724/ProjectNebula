@@ -13,8 +13,8 @@ public class Gunner : GunnerBehavior, IBasePlayer
     float rotateSpeed = 2;
     [HideInInspector]
     public float gunCooldown = 0.1f;
-    [HideInInspector]
-    public float gunRange = 1000;
+    
+    public float gunRange = 3000;
     [HideInInspector]
     public float maxGunHeat = 4; // max continuous fire allowed 4 sec
     public float currentGunHeat = 0;
@@ -23,8 +23,8 @@ public class Gunner : GunnerBehavior, IBasePlayer
     public Transform muzzle;
     [HideInInspector]
     public Vector3 target;
-    [HideInInspector]
-    public float bulletSpeed = 1000;
+
+    public float bulletSpeed = 300;
 
     Transform gunBase;
     Transform barrel;
@@ -39,6 +39,9 @@ public class Gunner : GunnerBehavior, IBasePlayer
 
     DynamicJoystick DynamicJoystick;
 
+    Vector3 screenCenter;
+    Camera mainCamera;
+
     //required coz we don't control the spawning of networked objects in the scene.
     public void Start()
     {
@@ -50,10 +53,13 @@ public class Gunner : GunnerBehavior, IBasePlayer
         CharStats = new CharacterStats();
         previousGyroEuler = DeviceRotation.Get().eulerAngles;
         //offset
-        DynamicJoystick = GameObject.FindGameObjectWithTag("p2joystick").GetComponent<DynamicJoystick>();
-        barrel.transform.rotation = Quaternion.Euler(barrel.transform.rotation.eulerAngles.x + barrelXoffset, barrel.transform.rotation.eulerAngles.y, barrel.transform.rotation.eulerAngles.z);
-        shootButton = GameObject.FindGameObjectWithTag("p2button").GetComponent<Button>();
+        GameObject.FindGameObjectWithTag("p2joystick")?.TryGetComponent<DynamicJoystick>(out DynamicJoystick);
+        //barrel.transform.rotation = Quaternion.Euler(barrel.transform.rotation.eulerAngles.x + barrelXoffset, barrel.transform.rotation.eulerAngles.y, barrel.transform.rotation.eulerAngles.z);
+        GameObject.FindGameObjectWithTag("p2button")?.TryGetComponent<Button>(out shootButton);
         shootButton.onClick.AddListener(onShootButton);
+
+        screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, 0);
+        mainCamera = Camera.main;
     }
     public void Initialize()
     {
@@ -104,12 +110,9 @@ public class Gunner : GunnerBehavior, IBasePlayer
         Vector3 direction = Vector3.right * DynamicJoystick.Horizontal;
         gunBase.Rotate(0, direction.x, 0);
         RaycastHit hit;
-            Debug.DrawRay(barrel.position, barrel.up*40f,Color.yellow);
-       
-            
-            
-                Vector3 altitudeTilt = transform.forward * DynamicJoystick.Vertical;
-                barrel.Rotate(-altitudeTilt.z, 0, 0);
+        Debug.DrawRay(barrel.position, barrel.up*40f,Color.yellow);
+        Vector3 altitudeTilt = transform.forward * DynamicJoystick.Vertical;
+        barrel.Rotate(Mathf.Clamp(-altitudeTilt.z, -78.289f, 30), 0, 0);
             
         
 
@@ -130,15 +133,16 @@ public class Gunner : GunnerBehavior, IBasePlayer
     }
     void onShootButton()
     {
-        Debug.Log("Shoot Button");
+        //Debug.Log("Shoot Button");
 
         if (!gunOverheat)
         {
             currentGunHeat += Time.deltaTime;
             gunCounter = 0;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            //Ray ray = mainCamera.ScreenPointToRay(screenCenter);
 
-            target = ray.GetPoint(gunRange);
+            //target = ray.GetPoint(gunRange);
+            target = mainCamera.ScreenPointToRay(screenCenter).GetPoint(gunRange);
             networkObject.target = target;
             networkObject.SendRpc(RPC_SHOOT, Receivers.All);
         }

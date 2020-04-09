@@ -8,6 +8,7 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
 
     public float ShieldCooldown { get; set; }
     public bool StalkEnemy { get; set; }
+    [SerializeField]
     public CharacterStats CharStats { get; set; }
     float rotationSpeed = 15f;
     public float boost;
@@ -41,17 +42,17 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
         shield = transform.Find("PlayerShield");
         rb = gameObject.GetComponent<Rigidbody>();
 
-        DynamicJoystick = GameObject.FindGameObjectWithTag("dynamicjoystick").GetComponent<DynamicJoystick>();
-        AltitudeJoystick = GameObject.FindGameObjectWithTag("Altitude").GetComponent<DynamicJoystick>();
+        Initialize();
+    }
+    public void Initialize()
+    {
+        GameObject.FindGameObjectWithTag("dynamicjoystick")?.TryGetComponent<DynamicJoystick>(out DynamicJoystick);
+        GameObject.FindGameObjectWithTag("Altitude")?.TryGetComponent<DynamicJoystick>(out AltitudeJoystick);
         CharStats = new CharacterStats();
         maxHealth = CharStats.health;
         maxShield = CharStats.shield;
         shieldMat = shield.GetComponent<Renderer>().material;
         ShieldCooldown = 5;
-    }
-    public void Initialize()
-    {
-
     }
 
     // Use this for initialization
