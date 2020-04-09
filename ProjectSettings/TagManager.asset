@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Shootable
+  - dynamicjoystick
+  - Altitude
+  - MotherShip
+  - p2joystick
+  - p2button
   layers:
   - Default
   - TransparentFX

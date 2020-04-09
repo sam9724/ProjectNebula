@@ -22,39 +22,51 @@ public class MothershipChasing : StateMachineBehaviour
     {
         FollowToAPoint(player.position); //        animator.ApplyBuiltinRootMotion();
        
-        if(EnemyManager.Instance.minionInScene()<1)
+        //if(EnemyManager.Instance.minionInScene()<1)
         {
             minionsTimer += Time.deltaTime;
-            if (minionsTimer > 5f)
+           //if (minionsTimer > 5f)
             {
-                EnemyManager.Instance.NumberOfMinionsToSpawn(3, 2);
+               // EnemyManager.Instance.NumberOfMinionsToSpawn(3, 2);
                 minionsTimer = 0f;
-            if (Physics.Raycast(mothership.position, mothership.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
-            {
-                Debug.DrawRay(mothership.position, mothership.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
-                if(hit.collider.CompareTag("Player"))
-                    {
-                        Debug.Log("Call player Damage Function.");
-                        //GameObject.Destroy(hit.collider.gameObject);
+                if (Physics.Raycast(mothership.position, mothership.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
+                {
+                    Debug.DrawRay(mothership.position, mothership.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
+                    raycastHit(hit);
+                    
 
-                    }
-                    else
-                    {
-                        Debug.Log("Destroy all the asteroids in middle");
-                        //GameObject.Destroy(hit.collider.gameObject);
-                    }
                 }
+                if(Physics.Raycast(new Vector3(mothership.position.x,mothership.position.y-(mothership.localScale.y/2),mothership.position.z), mothership.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
+                {
+                    Debug.DrawRay(new Vector3(mothership.position.x, mothership.position.y - (mothership.localScale.y / 2), mothership.position.z), mothership.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
+                    raycastHit(hit);
+                }
+                if (Physics.Raycast(new Vector3(mothership.position.x, mothership.position.y + (mothership.localScale.y / 2), mothership.position.z), mothership.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
+                {
+                    Debug.DrawRay(new Vector3(mothership.position.x, mothership.position.y + (mothership.localScale.y / 2), mothership.position.z), mothership.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
+                    raycastHit(hit);
+                }//
+                if (Physics.Raycast(new Vector3(mothership.position.x - (mothership.localScale.x / 2), mothership.position.y, mothership.position.z), mothership.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
+                {
+                    Debug.DrawRay(new Vector3(mothership.position.x - (mothership.localScale.x / 2), mothership.position.y , mothership.position.z), mothership.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
+                    raycastHit(hit);
+                }
+                if (Physics.Raycast(new Vector3(mothership.position.x + (mothership.localScale.x / 2), mothership.position.y, mothership.position.z), mothership.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
+                {
+                    Debug.DrawRay(new Vector3(mothership.position.x + (mothership.localScale.x / 2), mothership.position.y , mothership.position.z), mothership.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
+                    raycastHit(hit);
+                }
+                //
+                //
             }
             //if (Physics.CapsuleCast(mothership.position, mothership.position + Vector3.up * mothership.localScale.y, mothership.localScale.x, mothership.forward, out hit, 10))
             //{
-            //    Debug.Log(hit.collider.gameObject.name);
-                
+            //    Debug.Log(hit.collider.gameObject.name);                
             //}
+
             // Does the ray intersect any objects excluding the player layer
+
         }
-
-       
-
     }
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -65,10 +77,18 @@ public class MothershipChasing : StateMachineBehaviour
     void FollowToAPoint(Vector3 Position)
     {
         mothership.rotation = Quaternion.LookRotation(Vector3.RotateTowards(mothership.forward, (Position - mothership.position).normalized, MotherShipClass.rotateSpeed * Time.deltaTime, 0.0f));
-        if (Vector3.SqrMagnitude(mothership.position - Position) > 49f)
+        if (Vector3.SqrMagnitude(mothership.position - Position) > MotherShipClass.stoppingDistance)
             mothership.position = Vector3.MoveTowards(mothership.position, player.position, MotherShipClass.MovementSpeed * Time.deltaTime);      
     }
 
+    void raycastHit(RaycastHit hit)
+    {
+       // Debug.Log(hit.collider.gameObject.name);
+        if(hit.collider.gameObject.GetComponent<IDamagable>()!=null)
+        {
+            hit.collider.gameObject.GetComponent<IDamagable>().TakeDamage(2000f);
+        }
+    }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
     //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

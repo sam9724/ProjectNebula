@@ -15,14 +15,9 @@ public class Wandering : StateMachineBehaviour
     }
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if(vtemp==Vector3.zero)
-            vtemp = new Vector3(Random.value*100, Random.value*100, Random.value*100);
+        if(Vector3.SqrMagnitude(mothership.position-vtemp)<100 || vtemp == Vector3.zero)
+            vtemp = new Vector3(Random.Range(MotherShipClass.xMin, MotherShipClass.xMax), Random.Range(MotherShipClass.yMin, MotherShipClass.yMax), Random.Range(MotherShipClass.zMin, MotherShipClass.zMax));
 
-        if(Vector3.SqrMagnitude(mothership.position-vtemp)<100)
-            vtemp = new Vector3(Random.value*100, Random.value*100, Random.value*100);
-        Debug.Log(vtemp);
-        //mothership.LookAt(vtemp);
-        //mothership.position += mothership.forward *MotherShipClass.MovementSpeed* Time.deltaTime;
         FollowToAPoint(vtemp);
         TempTime += Time.deltaTime;
         if (TempTime>60f)
@@ -30,7 +25,6 @@ public class Wandering : StateMachineBehaviour
             EnemyManager.Instance.NumberOfMinionsToSpawn(5, 3);
             TempTime = 0;
         }
-
     }
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

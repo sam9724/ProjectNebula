@@ -52,7 +52,7 @@ public class NetworkFlow : NetworkFlowBehavior
             Player2Canvas.SetActive(true);
             Player1Canvas.SetActive(false);
 
-            NetworkManager.Instance.InstantiateMothership(0, Vector3.forward * -5);
+            NetworkManager.Instance.InstantiateMothership(0, Vector3.forward * -50f);
 
 
             NetworkManager.Instance.Networker.playerDisconnected += (player, sender) =>

@@ -10,6 +10,7 @@ public static class MotherShipClass
     static public float playerDetectionRange = 225f;
     static public float rotateSpeed = 5f;
     static public float MovementSpeed = 5f;
+    static public float stoppingDistance = 625f;
 
 
     static public Transform MinionsSpawnLocation;

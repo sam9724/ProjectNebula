@@ -9,11 +9,11 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
     public float ShieldCooldown { get; set; }
     public bool StalkEnemy { get; set; }
     public CharacterStats CharStats { get; set; }
-
+    float rotationSpeed = 15f;
     public float boost;
     float boostCooldown;
 
-    float moveSpeed = 50;
+    float moveSpeed = 70f;
 
     float maxHealth;
     float maxShield;
@@ -85,15 +85,15 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
         // Let the owner move the cube around with the arrow keys
 #if UNITY_ANDROID
         Vector3 direction = Vector3.right * DynamicJoystick.Horizontal;
-        transform.Rotate(0, direction.x, 0);
+        transform.Rotate(0, direction.x*dt* rotationSpeed, 0);
 
         Vector3 acceleration = transform.forward * DynamicJoystick.Vertical;
         rb.AddForce(acceleration * moveSpeed * dt, ForceMode.VelocityChange);
 
-        if (transform.rotation.x > -30f && transform.position.x < 30f)
+        //if (transform.rotation.x > -30f && transform.position.x < 30f)
         {
             Vector3 altitudeTilt = transform.forward * AltitudeJoystick.Vertical;
-            Debug.Log(altitudeTilt);
+            Debug.Log("Altitude"+altitudeTilt);
             transform.Rotate(-altitudeTilt.z, 0, 0);
         }
 #else

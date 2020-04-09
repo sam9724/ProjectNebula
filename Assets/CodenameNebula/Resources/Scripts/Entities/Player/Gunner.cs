@@ -2,13 +2,14 @@
 using System.Collections;
 using BeardedManStudios.Forge.Networking.Generated;
 using BeardedManStudios.Forge.Networking;
+using UnityEngine.UI;
 
 public class Gunner : GunnerBehavior, IBasePlayer
 {
     public float ShieldCooldown { get; set; }
     public bool StalkEnemy { get; set; }
     public CharacterStats CharStats { get; set; }
-
+    Button shootButton;
     float rotateSpeed = 2;
     [HideInInspector]
     public float gunCooldown = 0.1f;
@@ -36,6 +37,7 @@ public class Gunner : GunnerBehavior, IBasePlayer
     float barrelZoffset = 180;
     float barrelXoffset = 30;
 
+    DynamicJoystick DynamicJoystick;
 
     //required coz we don't control the spawning of networked objects in the scene.
     public void Start()
@@ -48,7 +50,10 @@ public class Gunner : GunnerBehavior, IBasePlayer
         CharStats = new CharacterStats();
         previousGyroEuler = DeviceRotation.Get().eulerAngles;
         //offset
+        DynamicJoystick = GameObject.FindGameObjectWithTag("p2joystick").GetComponent<DynamicJoystick>();
         barrel.transform.rotation = Quaternion.Euler(barrel.transform.rotation.eulerAngles.x + barrelXoffset, barrel.transform.rotation.eulerAngles.y, barrel.transform.rotation.eulerAngles.z);
+        shootButton = GameObject.FindGameObjectWithTag("p2button").GetComponent<Button>();
+        shootButton.onClick.AddListener(onShootButton);
     }
     public void Initialize()
     {
@@ -93,9 +98,20 @@ public class Gunner : GunnerBehavior, IBasePlayer
 
 
 #if UNITY_ANDROID
-        Vector3 delta = CalculateGyroDelta();
-        gunBase.rotation = Quaternion.Euler(0, gunBase.rotation.eulerAngles.y - delta.y, 0);
-        barrel.rotation = Quaternion.Euler(barrel.rotation.eulerAngles.x - delta.x, gunBase.rotation.eulerAngles.y - delta.y, barrelZoffset);
+        //Vector3 delta = CalculateGyroDelta();
+        //gunBase.rotation = Quaternion.Euler(0, gunBase.rotation.eulerAngles.y - delta.y, 0);
+        //barrel.rotation = Quaternion.Euler(barrel.rotation.eulerAngles.x - delta.x, gunBase.rotation.eulerAngles.y - delta.y, barrelZoffset);
+        Vector3 direction = Vector3.right * DynamicJoystick.Horizontal;
+        gunBase.Rotate(0, direction.x, 0);
+        RaycastHit hit;
+            Debug.DrawRay(barrel.position, barrel.up*40f,Color.yellow);
+       
+            
+            
+                Vector3 altitudeTilt = transform.forward * DynamicJoystick.Vertical;
+                barrel.Rotate(-altitudeTilt.z, 0, 0);
+            
+        
 
 #else
         gunBase.Rotate(new Vector3(0, Mathf.Clamp(InputManager.Instance.inputPkg.gunYaw, 0, 36), 0)* rotateSpeed * dt);
@@ -110,27 +126,32 @@ public class Gunner : GunnerBehavior, IBasePlayer
         // is no need for you to do that manually
 
         //gunCounter += dt;
-        if (InputManager.Instance.inputPkg.fire /*&& gunCounter > gunCooldown*/ && !gunOverheat)
+        
+    }
+    void onShootButton()
+    {
+        Debug.Log("Shoot Button");
+
+        if (!gunOverheat)
         {
-            currentGunHeat += dt;
+            currentGunHeat += Time.deltaTime;
             gunCounter = 0;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                    
+
             target = ray.GetPoint(gunRange);
             networkObject.target = target;
             networkObject.SendRpc(RPC_SHOOT, Receivers.All);
         }
         else
         {
-            currentGunHeat -= dt;
+            currentGunHeat -= Time.deltaTime;
         }
         currentGunHeat = Mathf.Clamp(currentGunHeat, 0, 4);
         if (currentGunHeat >= maxGunHeat)
             gunOverheat = true;
-        else if(currentGunHeat <= 0)
+        else if (currentGunHeat <= 0)
             gunOverheat = false;
     }
-
     public override void Shoot(RpcArgs args) => ProjectileFactory.Instance.CreateProjectile(ProjectileFactory.ProjectileType.Rail, muzzle.position, target, Quaternion.identity, bulletSpeed);
 
     Vector3 CalculateGyroDelta()
