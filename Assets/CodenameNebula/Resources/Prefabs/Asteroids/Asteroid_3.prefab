@@ -71,6 +71,7 @@ GameObject:
   m_Component:
   - component: {fileID: 170362539211629337}
   - component: {fileID: 170362539214626187}
+  - component: {fileID: 3675428898798037151}
   m_Layer: 0
   m_Name: Asteroid_3
   m_TagString: Enemy
@@ -109,6 +110,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!135 &3675428898798037151
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 170362539211290395}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.5559971
+  m_Center: {x: -0.18, y: 0.01, z: 0.05}
 --- !u!1 &170362539211447579
 GameObject:
   m_ObjectHideFlags: 0

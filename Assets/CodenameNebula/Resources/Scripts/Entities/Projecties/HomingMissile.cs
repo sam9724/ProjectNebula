@@ -16,6 +16,12 @@ public class HomingMissile : Projectile, IDamagable // Since Homing missiles can
 
     }
 
+
+    protected override void FollowTarget(float dt)
+    {
+        //missile follow
+    }
+
     // Update is called once per frame
     void Update()
     {
