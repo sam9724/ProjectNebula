@@ -137,7 +137,7 @@ public class Gunner : GunnerBehavior, IBasePlayer
             currentGunHeat += Time.deltaTime;
             gunCounter = 0;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
+            Vector3 Center=new Vector3(Screen.width / 2, Screen.height / 2, 0);
             target = ray.GetPoint(gunRange);
             networkObject.target = target;
             networkObject.SendRpc(RPC_SHOOT, Receivers.All);

@@ -11,6 +11,7 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
     public bool Wander { get; set; }
     public CharacterStats CharStats { get; set; }
     public bool IsAlive { get; set; }
+    public DestructorBeam destructorBeam;
 
     float shieldCooldown;
     float cloakCooldown;
@@ -128,9 +129,15 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
         }
     }
 
+    public void shoot()
+    {
+        networkObject.SendRpc(RPC_FIRE_BEAM, Receivers.All);
+    }
+
     public override void fireBeam(RpcArgs args)
     {
-        //throw new System.NotImplementedException();
+        destructorBeam =(DestructorBeam) ProjectileFactory.Instance.CreateProjectile(ProjectileFactory.ProjectileType.DestructionBeam, transform.position, player.position , Quaternion.identity, 10f); ;
+        
     }
 
     public override void spawnMinions(RpcArgs args)

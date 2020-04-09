@@ -8,6 +8,10 @@ public class DestructorBeam : Projectile
         // Explosion effect goes here.
     }
 
+    protected override void FollowTarget(float dt)
+    {
+        transform.localScale += new Vector3(0,0,1);
+    }
     protected override void HitTarget(IDamagable targetHit, string layerName)
     {
         //throw new System.NotImplementedException();

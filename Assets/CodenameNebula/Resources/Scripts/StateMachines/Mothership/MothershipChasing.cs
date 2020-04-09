@@ -29,6 +29,7 @@ public class MothershipChasing : StateMachineBehaviour
             {
                // EnemyManager.Instance.NumberOfMinionsToSpawn(3, 2);
                 minionsTimer = 0f;
+                EnemyManager.Instance.mothership.shoot();
                 if (Physics.Raycast(mothership.position, mothership.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
                 {
                     Debug.DrawRay(mothership.position, mothership.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
@@ -87,6 +88,7 @@ public class MothershipChasing : StateMachineBehaviour
         if(hit.collider.gameObject.GetComponent<IDamagable>()!=null)
         {
             hit.collider.gameObject.GetComponent<IDamagable>().TakeDamage(2000f);
+
         }
     }
 
