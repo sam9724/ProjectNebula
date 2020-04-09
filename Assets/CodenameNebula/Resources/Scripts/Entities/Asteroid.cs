@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Asteroid : MonoBehaviour, IDamagable, IManagable
 {
+
+    private float tumble = 0.2f;
     public void Die()
     {
         //to be implemented;
@@ -28,7 +30,7 @@ public class Asteroid : MonoBehaviour, IDamagable, IManagable
 
     public void Initialize()
     {
-        
+        GetComponent<Rigidbody>().angularVelocity = Random.insideUnitSphere * tumble;
     }
 
     public void PhysicsRefresh()

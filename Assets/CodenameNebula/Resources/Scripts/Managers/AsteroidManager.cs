@@ -30,10 +30,17 @@ public class AstroidManager
     private float tumble;
     GameObject astroidParent;
     List<GameObject> asteroidList = new List<GameObject>();
+    List<string> astroidType = new List<string> { "Asteroid_1", "Asteroid_2", "Asteroid_3" };
+    GameObject[] astroidPrefabs;
+    float specialNumber;
 
     public void Initialize()
     {
-        blockPrefab = Resources.Load<GameObject>("Prefabs/Asteroids/Asteroid_1");
+        astroidPrefabs = new GameObject[astroidType.Count];
+        for (int i = 0; i < astroidType.Count; i++)
+        {
+            astroidPrefabs[i] = Resources.Load<GameObject>("Prefabs/Asteroids/" + astroidType[i]);
+        }
         astroidParent = new GameObject("AstroidParent");
         makeRocks();
     }
@@ -48,15 +55,36 @@ public class AstroidManager
                 {
 
                     float noiseValue = Perlin3D(x * noiseScale, y * noiseScale, z * noiseScale);
+                    specialNumber = noiseValue * 1000;
                     if (noiseValue >= threshold)
                     {
 
                         //Debug.Log((Physics.CheckSphere(new Vector3(x, y, z), checksphere)));
                         //if (!(Physics.CheckSphere(new Vector3(x, y, z), checksphere)))
                         //{
+
+                        if (specialNumber % 10 >= 0 && specialNumber % 10 <= 3)
+                        {
+                            blockPrefab = astroidPrefabs[0];
+                        }
+                        else if (specialNumber % 10 >= 4 && specialNumber % 10 <= 6)
+                        {
+                            blockPrefab = astroidPrefabs[1];
+                        }
+                        else if (specialNumber % 10 >= 7 && specialNumber % 10 <= 9)
+                        {
+                            blockPrefab = astroidPrefabs[2];
+                        }
+                        else
+                        {
+                            blockPrefab = astroidPrefabs[0];
+                        }
+
                         GameObject go = GameObject.Instantiate(blockPrefab, new Vector3(x, y, z), Quaternion.identity, astroidParent.transform);
+                        go.AddComponent<Asteroid>().Initialize();
                         asteroidList.Add(go);
-                        go.GetComponent<Rigidbody>().angularVelocity = Vector3.one * noiseValue * tumble;
+                        
+                        //go.GetComponent<Rigidbody>().angularVelocity = Random.insideUnitSphere * tumble;
 
                         //}
 

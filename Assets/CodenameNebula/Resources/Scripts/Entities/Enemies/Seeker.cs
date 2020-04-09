@@ -5,6 +5,11 @@ using System.Collections.Generic;
 public class Seeker : MonoBehaviour, IMinion
 {
 
+    public float playerDetectionRange = 225f;
+    public float rotateSpeed = 5f;
+    public float MovementSpeed = 5f;
+    Transform player;
+
     public bool MoveWithBoss { get; set; }
     public bool SeekPlayer { get; set; }
     public bool ChasePlayer { get; set; }
@@ -63,5 +68,24 @@ public class Seeker : MonoBehaviour, IMinion
         //throw new System.NotImplementedException();
     }
 
-    //AI Logic
+    bool PlayerInRange()
+    {
+        return (Vector3.SqrMagnitude(transform.position - player.position) < playerDetectionRange);
+    }
+
+    public void Update()
+    {
+        player = player ?? PlayerManager.Instance.pilot.transform;
+
+        Debug.Log("player" + player.name);
+
+        if (PlayerInRange())
+        {
+            //do stuff
+        }
+        else
+        {
+            //look for player
+        }
+    }
 }
