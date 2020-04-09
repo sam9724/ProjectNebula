@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7057162318977039139}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: SpawnLocation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,8 @@ GameObject:
   - component: {fileID: 7057162320259732465}
   - component: {fileID: 7057162320259732464}
   - component: {fileID: -3644983921971004389}
-  m_Layer: 0
+  - component: {fileID: 7383755901318136646}
+  m_Layer: 12
   m_Name: MotherShip
   m_TagString: MotherShip
   m_Icon: {fileID: 0}
@@ -124,6 +125,20 @@ MonoBehaviour:
   yMax: 10
   zMin: -10
   zMax: 10
+--- !u!136 &7383755901318136646
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7057162320259732471}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 12.4
+  m_Height: 123.1
+  m_Direction: 2
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &130698461105743975
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -190,6 +205,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: F3_Green Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 7706704133163136415, guid: 1b9c9bd520ad54747a98d7222069677a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1b9c9bd520ad54747a98d7222069677a, type: 3}

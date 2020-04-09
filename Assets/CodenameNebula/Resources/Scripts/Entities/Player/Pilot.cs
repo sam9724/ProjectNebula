@@ -8,6 +8,7 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
 
     public float ShieldCooldown { get; set; }
     public bool StalkEnemy { get; set; }
+    [SerializeField]
     public CharacterStats CharStats { get; set; }
     float rotationSpeed = 15f;
     public float boost;
@@ -18,12 +19,11 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
     float maxHealth;
     float maxShield;
     float healthRegen = 2;
-    bool isUnderAttack = false;
-    float underAttackTimerCounter;
-    float regenCooldown = 10;
+    float notUnderAttackTimer;
+    float regenCooldown = 4;
 
     float shieldRegen = 5;
-
+    float shieldRepairSpeed = 1;
     public Rigidbody rb;
 
     public Transform gunnerSpawnPos;
@@ -31,23 +31,28 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
     DynamicJoystick DynamicJoystick;
     DynamicJoystick AltitudeJoystick;
 
+    Transform shield;
+    Material shieldMat;
+
     //required coz we don't control the spawning of networked objects in the scene.
     public void Start()
     {
         PlayerManager.Instance.pilot = this;
         gunnerSpawnPos = transform.Find("P2SpawnPoint");
+        shield = transform.Find("PlayerShield");
         rb = gameObject.GetComponent<Rigidbody>();
 
-        DynamicJoystick = GameObject.FindGameObjectWithTag("dynamicjoystick").GetComponent<DynamicJoystick>();
-        AltitudeJoystick = GameObject.FindGameObjectWithTag("Altitude").GetComponent<DynamicJoystick>();
-        CharStats = new CharacterStats();
-        maxHealth = CharStats.health;
-        maxShield = CharStats.shield;
-        ShieldCooldown = 5;
+        Initialize();
     }
     public void Initialize()
     {
-
+        GameObject.FindGameObjectWithTag("dynamicjoystick")?.TryGetComponent<DynamicJoystick>(out DynamicJoystick);
+        GameObject.FindGameObjectWithTag("Altitude")?.TryGetComponent<DynamicJoystick>(out AltitudeJoystick);
+        CharStats = new CharacterStats();
+        maxHealth = CharStats.health;
+        maxShield = CharStats.shield;
+        shieldMat = shield.GetComponent<Renderer>().material;
+        ShieldCooldown = 5;
     }
 
     // Use this for initialization
@@ -108,8 +113,8 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
 
         // Note: Forge Networking takes care of only sending the delta, so there
         // is no need for you to do that manually
-
-        if (underAttackTimerCounter >= regenCooldown)
+        notUnderAttackTimer += dt;
+        if (notUnderAttackTimer >= regenCooldown)
         {
             RegenHP(dt);
             RegenShield(dt);
@@ -119,14 +124,13 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
 
     public void TakeDamage(float damage)
     {
-        isUnderAttack = true;
         if (CharStats.shield > 0)
         {
             TakeShieldDamage(damage * 2);
             return;
         }
         CharStats.health -= damage;
-        underAttackTimerCounter = 0;
+        notUnderAttackTimer = 0;
 
         if (CharStats.health <= 0)
             Die();
@@ -146,19 +150,29 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
 
     public void BreakShield()
     {
-        //to be implemented
+        shieldMat.SetFloat("_ShieldSlider", 1);
+        shield.gameObject.SetActive(false);
     }
 
     public void RegenHP(float dt)
     {
-        isUnderAttack = false;
         if (CharStats.health < maxHealth)
             CharStats.health = Mathf.Clamp(CharStats.health += healthRegen * dt, 0, maxHealth);  
     }
 
     public void RegenShield(float dt)
     {
+        RepairShield(dt);
         if (CharStats.shield < maxShield)
             CharStats.shield = Mathf.Clamp(CharStats.shield += shieldRegen * dt, 0, maxShield);
+    }
+
+    void RepairShield(float dt)
+    {
+        if (CharStats.shield <= 0)
+            shield.gameObject.SetActive(true);
+
+        if (CharStats.shield < maxShield)
+            shieldMat.SetFloat("_ShieldSlider", Mathf.Lerp(1, 0, shieldRepairSpeed *dt));
     }
 }

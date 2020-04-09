@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace BeardedManStudios.Forge.Networking.Generated
 {
-	[GeneratedInterpol("{\"inter\":[0,0,0,0.25,0.25]")]
+	[GeneratedInterpol("{\"inter\":[0,0,0,0.15,0.15]")]
 	public partial class GunnerNetworkObject : NetworkObject
 	{
-		public const int IDENTITY = 4;
+		public const int IDENTITY = 5;
 
 		private byte[] _dirtyFields = new byte[1];
 
@@ -111,7 +111,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 		[ForgeGeneratedField]
 		private Quaternion _baseRotation;
 		public event FieldEvent<Quaternion> baseRotationChanged;
-		public InterpolateQuaternion baseRotationInterpolation = new InterpolateQuaternion() { LerpT = 0.25f, Enabled = true };
+		public InterpolateQuaternion baseRotationInterpolation = new InterpolateQuaternion() { LerpT = 0.15f, Enabled = true };
 		public Quaternion baseRotation
 		{
 			get { return _baseRotation; }
@@ -142,7 +142,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 		[ForgeGeneratedField]
 		private Quaternion _barrelRotation;
 		public event FieldEvent<Quaternion> barrelRotationChanged;
-		public InterpolateQuaternion barrelRotationInterpolation = new InterpolateQuaternion() { LerpT = 0.25f, Enabled = true };
+		public InterpolateQuaternion barrelRotationInterpolation = new InterpolateQuaternion() { LerpT = 0.15f, Enabled = true };
 		public Quaternion barrelRotation
 		{
 			get { return _barrelRotation; }

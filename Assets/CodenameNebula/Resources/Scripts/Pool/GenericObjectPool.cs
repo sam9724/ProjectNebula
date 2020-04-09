@@ -36,7 +36,7 @@ public class GenericObjectPool// where T: IPoolable
     {
         toRet = null;
 
-        if (pool.Count > 0 && pool.ContainsKey(type))
+        if (pool.Count > 0 && pool.ContainsKey(type) && pool[type].Count > 0)
         {
             toRet = pool[type].Dequeue();
             return true;
