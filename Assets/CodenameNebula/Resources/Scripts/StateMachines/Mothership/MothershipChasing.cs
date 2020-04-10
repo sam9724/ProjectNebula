@@ -12,6 +12,7 @@ public class MothershipChasing : StateMachineBehaviour
     Transform player;
     bool wanderPoint = false;
             RaycastHit hit;
+    float cloackTimer=0f;
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         mothership = MotherShipClass.motherShip;
@@ -22,13 +23,31 @@ public class MothershipChasing : StateMachineBehaviour
     {
         FollowToAPoint(player.position); //        animator.ApplyBuiltinRootMotion();
        
+       // Debug.Log("MAterial: "+EnemyManager.Instance.mothership.GetComponentInChildren<MeshRenderer>().material.name);// SetFloat("CloakSlider",1);
         if(EnemyManager.Instance.minionInScene()<1)
         {
             minionsTimer += Time.deltaTime;
-           if (minionsTimer > 5f)
+            if (minionsTimer > 5f)
             {
-               // EnemyManager.Instance.NumberOfMinionsToSpawn(3, 2);
+                EnemyManager.Instance.NumberOfMinionsToSpawn(3, 2);
                 minionsTimer = 0f;
+                if (cloackTimer <= 1f)
+                {
+                    cloackTimer += Time.deltaTime;
+                    EnemyManager.Instance.mothership.GetComponentInChildren<MeshRenderer>().material.SetFloat("_CloakSlider", cloackTimer);
+                }
+                if (cloackTimer >= 1)
+                    cloackTimer = 1;
+            }
+
+            if (cloackTimer >= 0f)
+            {
+                cloackTimer -= Time.deltaTime;
+                EnemyManager.Instance.mothership.GetComponentInChildren<MeshRenderer>().material.SetFloat("_CloakSlider", cloackTimer);
+            }
+            if (cloackTimer <= 0)
+                cloackTimer = 0;
+
                 EnemyManager.Instance.mothership.shoot();
                 if (Physics.Raycast(mothership.position, mothership.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
                 {
@@ -59,7 +78,7 @@ public class MothershipChasing : StateMachineBehaviour
                 }
                 //
                 //
-            }
+            
             //if (Physics.CapsuleCast(mothership.position, mothership.position + Vector3.up * mothership.localScale.y, mothership.localScale.x, mothership.forward, out hit, 10))
             //{
             //    Debug.Log(hit.collider.gameObject.name);                

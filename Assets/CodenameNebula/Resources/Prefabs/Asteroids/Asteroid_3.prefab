@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 170362539211643971}
   - component: {fileID: 170362539224390725}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: test_asteroid_LODGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -72,7 +72,7 @@ GameObject:
   - component: {fileID: 170362539211629337}
   - component: {fileID: 170362539214626187}
   - component: {fileID: 3675428898798037151}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Asteroid_3
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 170362539211735151}
   - component: {fileID: 170362539208219863}
   - component: {fileID: 170362539209307699}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: test_asteroid3_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -213,7 +213,7 @@ GameObject:
   - component: {fileID: 170362539211749683}
   - component: {fileID: 170362539208236007}
   - component: {fileID: 170362539209298231}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: test_asteroid3_LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -292,7 +292,7 @@ GameObject:
   - component: {fileID: 170362539211653347}
   - component: {fileID: 170362539208257635}
   - component: {fileID: 170362539209292569}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: test_asteroid3_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
