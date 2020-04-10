@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using BeardedManStudios.Forge.Networking.Generated;
+using UnityEngine.UI;
 
 
 public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
@@ -16,8 +17,8 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
 
     float moveSpeed = 70f;
 
-    float maxHealth;
-    float maxShield;
+    public float maxHealth;
+    public float maxShield;
     float healthRegen = 2;
     float notUnderAttackTimer;
     float regenCooldown = 4;
@@ -30,6 +31,11 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
 
     DynamicJoystick DynamicJoystick;
     DynamicJoystick AltitudeJoystick;
+
+    GameObject PilotCanvas;
+
+    Image healthbar;
+    Image shieldbar;
 
     Transform shield;
     Material shieldMat;
@@ -46,8 +52,16 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
     }
     public void Initialize()
     {
-        GameObject.FindGameObjectWithTag("dynamicjoystick")?.TryGetComponent<DynamicJoystick>(out DynamicJoystick);
-        GameObject.FindGameObjectWithTag("Altitude")?.TryGetComponent<DynamicJoystick>(out AltitudeJoystick);
+        //GameObject.FindGameObjectWithTag("dynamicjoystick")?.TryGetComponent<DynamicJoystick>(out DynamicJoystick);
+        //GameObject.FindGameObjectWithTag("Altitude")?.TryGetComponent<DynamicJoystick>(out AltitudeJoystick);
+        PilotCanvas = GameObject.Find("PilotCanvas");
+        PilotCanvas?.TryGetComponent<DynamicJoystick>(out DynamicJoystick);
+        PilotCanvas?.TryGetComponent<DynamicJoystick>(out AltitudeJoystick);
+        PilotCanvas?.transform.Find("DoubleBar").Find("lifeBar").TryGetComponent<Image>(out healthbar);
+        PilotCanvas?.transform.Find("DoubleBar").Find("shieldBar").TryGetComponent<Image>(out shieldbar);
+
+
+
         CharStats = new CharacterStats();
         maxHealth = CharStats.health;
         maxShield = CharStats.shield;
@@ -118,7 +132,13 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
         {
             RegenHP(dt);
             RegenShield(dt);
+
         }
+
+
+        //Changing healthbar and shieldbar values
+        healthbar.fillAmount = CharStats.health / maxHealth * dt;
+        shieldbar.fillAmount = CharStats.shield / maxShield * dt;
             
     }
 
@@ -130,11 +150,14 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
             return;
         }
         CharStats.health -= damage;
+        
         notUnderAttackTimer = 0;
 
         if (CharStats.health <= 0)
             Die();
     }
+
+
 
     public void Die()
     {

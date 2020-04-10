@@ -14,6 +14,7 @@ public class Drone : DroneBehavior, IMinion
     Transform player;
     Transform mothership;
     Transform missileLocation;
+    float missileCooldown = 20f;
 
     public bool MoveWithBoss { get; set; }
     public bool SeekPlayer { get; set; }
@@ -109,9 +110,10 @@ public class Drone : DroneBehavior, IMinion
             networkObject.rotation = transform.rotation;
         }
         Debug.Log("player" + player.name);
-        if (PlayerInRange())
+        if (PlayerInRange() && missileCooldown == 0)
         {
-            //rpc call this
+            networkObject.SendRpc(RPC_SHOOT_MISSILE, Receivers.All);
+            missileCooldown = 20;
         }
 
         

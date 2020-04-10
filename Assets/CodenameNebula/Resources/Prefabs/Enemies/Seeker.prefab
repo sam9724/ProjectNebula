@@ -168,6 +168,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1444371269171241436}
   - component: {fileID: 1537073241449407422}
+  - component: {fileID: -3193827241337333407}
   m_Layer: 12
   m_Name: Seeker
   m_TagString: Untagged
@@ -228,6 +229,23 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &-3193827241337333407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1443061149298291272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa873fe3760c46349ae7c2e17cb9562b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerDetectionRange: 225
+  rotateSpeed: 5
+  MovementSpeed: 5
+  sphereRadius: 1.5
+  sweepDistance: 2
 --- !u!1 &1443061150222684166
 GameObject:
   m_ObjectHideFlags: 0
