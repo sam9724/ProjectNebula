@@ -25,9 +25,10 @@ public class Gunner : GunnerBehavior, IBasePlayer
     public Vector3 target;
     [HideInInspector]
     public float bulletSpeed = 40;
-
+    GameObject GunnerCanvas;
     Transform gunBase;
     Transform barrel;
+
 
     bool gunOverheat = false;
 
@@ -38,6 +39,8 @@ public class Gunner : GunnerBehavior, IBasePlayer
     float barrelXoffset = 30;
 
     DynamicJoystick DynamicJoystick;
+    Image healthbar;
+    Image shieldbar;
 
     Vector3 screenCenter;
     Camera mainCamera;
@@ -53,9 +56,16 @@ public class Gunner : GunnerBehavior, IBasePlayer
         CharStats = new CharacterStats();
         previousGyroEuler = DeviceRotation.Get().eulerAngles;
         //offset
-        GameObject.FindGameObjectWithTag("p2joystick")?.TryGetComponent<DynamicJoystick>(out DynamicJoystick);
+        //GameObject.FindGameObjectWithTag("p2joystick")?.TryGetComponent<DynamicJoystick>(out DynamicJoystick);
         //barrel.transform.rotation = Quaternion.Euler(barrel.transform.rotation.eulerAngles.x + barrelXoffset, barrel.transform.rotation.eulerAngles.y, barrel.transform.rotation.eulerAngles.z);
-        GameObject.FindGameObjectWithTag("p2button")?.TryGetComponent<Button>(out shootButton);
+        //GameObject.FindGameObjectWithTag("p2button")?.TryGetComponent<Button>(out shootButton);
+
+        GunnerCanvas = GameObject.Find("GunnerCanvas");
+        GunnerCanvas?.TryGetComponent<DynamicJoystick>(out DynamicJoystick);
+        GunnerCanvas?.TryGetComponent<Button>(out shootButton);
+        GunnerCanvas?.transform.Find("DoubleBar").Find("lifeBar").TryGetComponent<Image>(out healthbar);
+        GunnerCanvas?.transform.Find("DoubleBar").Find("shieldBar").TryGetComponent<Image>(out shieldbar);
+
         shootButton.onClick.AddListener(onShootButton);
 
         screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, 0);
@@ -129,6 +139,10 @@ public class Gunner : GunnerBehavior, IBasePlayer
         // is no need for you to do that manually
 
         //gunCounter += dt;
+
+
+        healthbar.fillAmount = PlayerManager.Instance.pilot.CharStats.health/ PlayerManager.Instance.pilot.maxHealth * dt;
+        shieldbar.fillAmount = PlayerManager.Instance.pilot.CharStats.shield/ PlayerManager.Instance.pilot.maxShield * dt;
         
     }
     void onShootButton()
