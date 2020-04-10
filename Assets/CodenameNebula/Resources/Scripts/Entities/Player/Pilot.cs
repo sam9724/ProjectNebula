@@ -137,8 +137,8 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
 
 
         //Changing healthbar and shieldbar values
-        healthbar.fillAmount = CharStats.health / maxHealth * dt;
-        shieldbar.fillAmount = CharStats.shield / maxShield * dt;
+        healthbar.fillAmount = CharStats.health / maxHealth;
+        shieldbar.fillAmount = CharStats.shield / maxShield;
             
     }
 
@@ -161,7 +161,8 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
 
     public void Die()
     {
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
+        GameFlow.Instance.isPaused = true;
     }
 
     public void TakeShieldDamage(float damage)

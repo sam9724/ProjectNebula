@@ -15,12 +15,14 @@ public class Seeker : SeekerBehavior, IMinion
     public float sweepDistance = 2f;
     Transform barrel;
     float laserCooldown = 10f;
+
     public bool MoveWithBoss { get; set; }
     public bool SeekPlayer { get; set; }
     public bool ChasePlayer { get; set; }
     public bool Wander { get; set; }
     public CharacterStats CharStats { get; set; }
     public bool IsAlive { get; set; }
+    public float MaxHealth { get; set; }
 
     /*public IPoolable Dequeue()
     {
@@ -48,6 +50,7 @@ public class Seeker : SeekerBehavior, IMinion
     {
         barrel = transform.Find("Barrel");
         CharStats = new CharacterStats(10, 0);
+        MaxHealth = CharStats.health;
     }
 
     public void PhysicsRefresh(float dt)

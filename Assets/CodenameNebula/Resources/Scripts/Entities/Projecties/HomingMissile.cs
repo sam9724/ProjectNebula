@@ -8,10 +8,12 @@ public class HomingMissile : Projectile, IDamagable // Since Homing missiles can
     public float MovementSpeed = 5f;
     public float rotateSpeed = 5f;
     public float missileExplosionRange = 5f;
-    float missileHealth = 5f; 
+    float missileHealth = 5f;
+    float missileDamage = 10f;
     protected override void HitTarget(IDamagable targetHit, string layerName)
     {
-        //throw new System.NotImplementedException();
+        if (layerName == "Player" || layerName == "Asteroid")
+            targetHit.TakeDamage(missileDamage);
     }
 
     // Use this for initialization

@@ -43,7 +43,7 @@ public class Gunner : GunnerBehavior, IBasePlayer
     Image shieldbar;
 
     Vector3 screenCenter;
-    Camera mainCamera;
+    public Camera mainCamera;
 
     //required coz we don't control the spawning of networked objects in the scene.
     public void Start()
@@ -66,7 +66,7 @@ public class Gunner : GunnerBehavior, IBasePlayer
         GunnerCanvas?.transform.Find("DoubleBar").Find("lifeBar").TryGetComponent<Image>(out healthbar);
         GunnerCanvas?.transform.Find("DoubleBar").Find("shieldBar").TryGetComponent<Image>(out shieldbar);
 
-        shootButton.onClick.AddListener(onShootButton);
+        shootButton?.onClick?.AddListener(onShootButton);
 
         screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, 0);
         mainCamera = Camera.main;
@@ -141,8 +141,8 @@ public class Gunner : GunnerBehavior, IBasePlayer
         //gunCounter += dt;
 
 
-        healthbar.fillAmount = PlayerManager.Instance.pilot.CharStats.health/ PlayerManager.Instance.pilot.maxHealth * dt;
-        shieldbar.fillAmount = PlayerManager.Instance.pilot.CharStats.shield/ PlayerManager.Instance.pilot.maxShield * dt;
+        healthbar.fillAmount = PlayerManager.Instance.pilot.CharStats.health/ PlayerManager.Instance.pilot.maxHealth;
+        shieldbar.fillAmount = PlayerManager.Instance.pilot.CharStats.shield/ PlayerManager.Instance.pilot.maxShield;
         
     }
     void onShootButton()

@@ -11,13 +11,16 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
     public bool Wander { get; set; }
     public CharacterStats CharStats { get; set; }
     public bool IsAlive { get; set; }
+
+    public float MaxHealth { get; set; }
+
     //public DestructorBeam destructorBeam;
 
     float shieldCooldown;
     float cloakCooldown;
     Transform player;
 
-    public float playerDetectionRange = 225f;
+    public float playerDetectionRange = 15625f;
     public float rotateSpeed = 5f;
     public float MovementSpeed = 5f;
     float tempTimeCounter = 0f;
@@ -40,7 +43,8 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
     {
         //EnemyManager.Instance.EnemyDied(this);
         //isAlive = false;
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
+        GameFlow.Instance.isPaused = true;
         //game win message
     }
 
@@ -68,6 +72,7 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
         EnemyManager.Instance.mothership = this;
         IsAlive = true;
         CharStats = new CharacterStats(100, 0);
+        MaxHealth = CharStats.health;
 
     }
 

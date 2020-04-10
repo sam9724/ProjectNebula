@@ -10,7 +10,7 @@ public class GameFlow
     public static GameFlow Instance { get { return instance ?? (instance = new GameFlow()); } }
     #endregion
 
-
+    public bool isPaused = false;
     public void Initialize()
     {
         //GameSetup.gs = GameObject.FindObjectOfType<GameSetup>();
@@ -38,21 +38,28 @@ public class GameFlow
     public void PhysicsRefresh(float fdt)
     {
         //UIManager.Instance.PhysicsRefresh();
+        
         InputManager.Instance.PhysicsRefresh();
-        PlayerManager.Instance.PhysicsRefresh(fdt);
-        EnemyManager.Instance.PhysicsRefresh(fdt);
+        
+
+        if (!isPaused)
+        {
+            PlayerManager.Instance.PhysicsRefresh(fdt);
+            EnemyManager.Instance.PhysicsRefresh(fdt);
+        }
 
     }
 
     public void Refresh(float dt)
     {
-        //UIManager.Instance.Refresh();
         InputManager.Instance.Refresh();
-        PlayerManager.Instance.Refresh(dt);
-        EnemyManager.Instance.Refresh(dt);
-        ProjectileManager.Instance.Refresh(dt);
-        ParticleManager.Instance.Refresh(dt);
-
+        if (!isPaused)
+        {
+            PlayerManager.Instance.Refresh(dt);
+            EnemyManager.Instance.Refresh(dt);
+            ProjectileManager.Instance.Refresh(dt);
+            ParticleManager.Instance.Refresh(dt);
+        }
     }
 
     public void RestartFlow()

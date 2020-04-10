@@ -15,13 +15,14 @@ public class Drone : DroneBehavior, IMinion
     Transform mothership;
     Transform missileLocation;
     float missileCooldown = 20f;
-
     public bool MoveWithBoss { get; set; }
     public bool SeekPlayer { get; set; }
     public bool ChasePlayer { get; set; }
     public bool Wander { get; set; }
     public CharacterStats CharStats { get; set; }
     public bool IsAlive { get; set; }
+    public float MaxHealth { get; set; }
+
 
     /*public IPoolable Dequeue()
     {
@@ -48,6 +49,7 @@ public class Drone : DroneBehavior, IMinion
     {
         missileLocation = transform.Find("missilePos");
         CharStats = new CharacterStats(10, 0);
+        MaxHealth = CharStats.health;
     }
 
     public void PhysicsRefresh(float dt)

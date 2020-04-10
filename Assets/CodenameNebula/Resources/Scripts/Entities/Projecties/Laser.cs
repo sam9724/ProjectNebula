@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Laser : Projectile
 {
-    float laserDamage = 2;
+    float laserDamage = 5f;
     // Use this for initialization
     public override void Initialize()
     {

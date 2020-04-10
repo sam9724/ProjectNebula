@@ -28,7 +28,7 @@ public class NetworkFlow : NetworkFlowBehavior
 
         if (NetworkManager.Instance.IsServer)
         {
-            PilotBehavior c = NetworkManager.Instance.InstantiatePilot(0, Vector3.zero);    // Changed DKE to include index and start position
+            PilotBehavior c = NetworkManager.Instance.InstantiatePilot(0, new Vector3(200,25,150));    // Changed DKE to include index and start position
             c.networkObject.ownerNetworkId = networkObject.MyPlayerId;
             _playerObjects.Add(networkObject.MyPlayerId, c);
             c.transform.Find("PilotCamera").gameObject.SetActive(true);
@@ -52,7 +52,7 @@ public class NetworkFlow : NetworkFlowBehavior
             Player2Canvas.SetActive(true);
             Player1Canvas.SetActive(false);
 
-            NetworkManager.Instance.InstantiateMothership(0, Vector3.forward * -50f);
+            NetworkManager.Instance.InstantiateMothership(0, new Vector3(200, 25, 50));
 
 
             NetworkManager.Instance.Networker.playerDisconnected += (player, sender) =>

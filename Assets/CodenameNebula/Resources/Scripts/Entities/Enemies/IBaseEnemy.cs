@@ -10,6 +10,8 @@ public interface IBaseEnemy : IBaseCharacter, IDamagable, IManagable
 
     bool IsAlive { get; set; }
 
+    float MaxHealth { get; set; }
+
     //Base Enemy Logic
 }
 
