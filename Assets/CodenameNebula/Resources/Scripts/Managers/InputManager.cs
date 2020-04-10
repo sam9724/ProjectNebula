@@ -119,4 +119,14 @@ public class InputManager : IManagable
         /*else
             ip.gunYaw = 0;*/
     }
+
+    public void Refresh(float dt)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void PhysicsRefresh(float dt)
+    {
+        throw new System.NotImplementedException();
+    }
 }

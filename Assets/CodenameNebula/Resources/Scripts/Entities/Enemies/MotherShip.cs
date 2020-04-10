@@ -76,7 +76,7 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
 
     }
 
-    public void PhysicsRefresh()
+    public void PhysicsRefresh(float dt)
     {
         
     }
@@ -148,7 +148,7 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
         //throw new System.NotImplementedException();
     }
 
-    public void Refresh()
+    public void Refresh(float dt)
     {
         //throw new System.NotImplementedException();
     }

@@ -14,6 +14,7 @@ public class Seeker : SeekerBehavior, IMinion
     public float sphereRadius = 1.5f;
     public float sweepDistance = 2f;
     Transform barrel;
+    float laserCooldown = 10f;
     public bool MoveWithBoss { get; set; }
     public bool SeekPlayer { get; set; }
     public bool ChasePlayer { get; set; }
@@ -29,12 +30,13 @@ public class Seeker : SeekerBehavior, IMinion
 
     void Start()
     {
-        barrel = transform.Find("Barrel");
+        
     }
 
     public void Die()
     {
-        //to be implemented
+        gameObject.SetActive(false);
+        EnemyManager.Instance.EnemyDied(this);
     }
 
     /*public void Enqueue()
@@ -44,10 +46,11 @@ public class Seeker : SeekerBehavior, IMinion
 
     public void Initialize()
     {
+        barrel = transform.Find("Barrel");
         CharStats = new CharacterStats(10, 0);
     }
 
-    public void PhysicsRefresh()
+    public void PhysicsRefresh(float dt)
     {
         
     }
@@ -57,37 +60,7 @@ public class Seeker : SeekerBehavior, IMinion
         
     }
 
-    public void Refresh()
-    {
-        
-    }
-
-    public void RegenHP(float dt)
-    {
-        //throw new System.NotImplementedException();
-    }
-
-    public void TakeDamage()
-    {
-        
-    }
-
-    public void TakeDamage(float damage)
-    {
-        //throw new System.NotImplementedException();
-    }
-
-    bool PlayerInRange()
-    {
-        return (Vector3.SqrMagnitude(transform.position - player.position) < playerDetectionRange);
-    }
-
-    public void Shoot()
-    {
-        networkObject.SendRpc(RPC_SHOOT_LASER, Receivers.All);
-    }
-
-    public void Update()
+    public void Refresh(float dt)
     {
         player = player ?? PlayerManager.Instance.pilot.transform;
 
@@ -96,10 +69,12 @@ public class Seeker : SeekerBehavior, IMinion
         if (PlayerInRange())
         {
             //shoot
-
-            //temp rotate shit.
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(transform.position - player.position), rotateSpeed * Time.deltaTime);
-            transform.position += transform.forward * MovementSpeed * Time.deltaTime;
+            if(laserCooldown == 0)
+            {
+                Shoot();
+                laserCooldown = 10f;
+            }
+            laserCooldown -= dt;
         }
         else
         {
@@ -114,6 +89,41 @@ public class Seeker : SeekerBehavior, IMinion
             }
 
         }
+    }
+
+    public void RegenHP(float dt)
+    {
+        //throw new System.NotImplementedException();
+    }
+
+    public void TakeDamage()
+    {
+        
+    }
+
+    public void TakeDamage(float damage)
+    {
+        CharStats.health -= damage;
+        if (CharStats.health <= 0)
+        {
+            Explode();
+            Die();
+        }
+    }
+
+    bool PlayerInRange()
+    {
+        return (Vector3.SqrMagnitude(transform.position - player.position) < playerDetectionRange);
+    }
+
+    public void Shoot()
+    {
+        networkObject.SendRpc(RPC_SHOOT_LASER, Receivers.All);
+    }
+
+    public void Update()
+    {
+        
     }
 
 
@@ -156,8 +166,12 @@ public class Seeker : SeekerBehavior, IMinion
             return false;
         //see if there's anything around you
     }
+    void Explode()
+    {
+        // Explosion effect goes here. Sound line is put in first cause sound takes a bit to load
+        AudioSource.PlayClipAtPoint(AudioManager.Instance.soundDict["explosionSound"], transform.position);
+        ParticleFactory.Instance.CreateParticle(ParticleFactory.ParticleType.HomingMissileExplosion, transform.position, Quaternion.identity);
+    }
 
-
-
-     public override void ShootLaser(RpcArgs args) => ProjectileFactory.Instance.CreateProjectile(ProjectileFactory.ProjectileType.Laser, barrel.position, player.position ,Quaternion.identity, 50);
+    public override void ShootLaser(RpcArgs args) => ProjectileFactory.Instance.CreateProjectile(ProjectileFactory.ProjectileType.Laser, barrel.position, player.position ,Quaternion.identity, 50);
 }

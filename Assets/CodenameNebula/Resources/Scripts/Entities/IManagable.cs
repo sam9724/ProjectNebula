@@ -6,6 +6,6 @@ public interface IManagable
 {
     void Initialize();
     void PostInitialize();
-    void Refresh();
-    void PhysicsRefresh();
+    void Refresh(float dt);
+    void PhysicsRefresh(float dt);
 }

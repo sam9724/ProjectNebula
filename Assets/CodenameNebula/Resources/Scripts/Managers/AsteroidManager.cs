@@ -20,19 +20,20 @@ public class AstroidManager
 
     [SerializeField]
     private GameObject blockPrefab;
-    public int a = 100, b = 50, c = 100;
+    public int a = 400, b = 100, c = 1000;
     [SerializeField]
     private float noiseScale = 2.07f;
     public int seed = 65766;
     [SerializeField, Range(0, 1)]
-    private float threshold = 0.77f;
+    private float threshold = 0.86f;
     [SerializeField]
     private float tumble;
     GameObject astroidParent;
     List<GameObject> asteroidList = new List<GameObject>();
     List<string> astroidType = new List<string> { "Asteroid_1", "Asteroid_2", "Asteroid_3" };
     GameObject[] astroidPrefabs;
-    float specialNumber;
+    int specialNumber;
+    int scaleNumber;
 
     public void Initialize()
     {
@@ -61,7 +62,8 @@ public class AstroidManager
                 {
 
                     float noiseValue = Perlin3D(x * noiseScale, y * noiseScale, z * noiseScale);
-                    specialNumber = noiseValue * 1000;
+                    specialNumber = (int)(noiseValue * 1000) % 10;
+                    scaleNumber = (int)(noiseValue * 100) %10;
                     if (noiseValue >= threshold)
                     {
 
@@ -69,21 +71,49 @@ public class AstroidManager
                         //if (!(Physics.CheckSphere(new Vector3(x, y, z), checksphere)))
                         //{
 
-                        if (specialNumber % 10 >= 0 && specialNumber % 10 <= 3)
+                        if (specialNumber >= 0 && specialNumber <= 3)
                         {
                             blockPrefab = astroidPrefabs[0];
                         }
-                        else if (specialNumber % 10 >= 4 && specialNumber % 10 <= 6)
+                        else if (specialNumber >= 4 && specialNumber <= 6)
                         {
                             blockPrefab = astroidPrefabs[1];
                         }
-                        else if (specialNumber % 10 >= 7 && specialNumber % 10 <= 9)
+                        else if (specialNumber >= 7 && specialNumber<= 9)
                         {
                             blockPrefab = astroidPrefabs[2];
                         }
                         else
                         {
                             blockPrefab = astroidPrefabs[0];
+                        }
+
+                        ////
+                        ///
+
+                        if (scaleNumber == 0 && scaleNumber <= 2)
+                        {
+                            blockPrefab.transform.localScale = Vector3.one;
+                        }
+                        else if (scaleNumber == 3 && scaleNumber <= 5)
+                        {
+                            blockPrefab.transform.localScale = Vector3.one*1.5f;
+                        }
+                        else if (scaleNumber ==6)
+                        {
+                            blockPrefab.transform.localScale = Vector3.one*2;
+                        }
+                        else if (scaleNumber == 7 && scaleNumber <= 8)
+                        {
+                            blockPrefab.transform.localScale = Vector3.one * 2.5f;
+                        }
+                        else if (scaleNumber == 9)
+                        {
+                            blockPrefab.transform.localScale = Vector3.one * 3;
+                        }
+                        else
+                        {
+                            blockPrefab.transform.localScale = Vector3.one;
                         }
 
                         GameObject go = GameObject.Instantiate(blockPrefab, new Vector3(x, y, z), Quaternion.identity, astroidParent.transform);

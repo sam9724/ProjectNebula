@@ -31,7 +31,8 @@ public class Drone : DroneBehavior, IMinion
 
     public void Die()
     {
-        //to be implemented
+        gameObject.SetActive(false);
+        EnemyManager.Instance.EnemyDied(this);
     }
 
     /*public void Enqueue()
@@ -41,15 +42,15 @@ public class Drone : DroneBehavior, IMinion
 
     public void Start()
     {
-        missileLocation = transform.Find("missilePos");
     }
 
     public void Initialize()
     {
+        missileLocation = transform.Find("missilePos");
         CharStats = new CharacterStats(10, 0);
     }
 
-    public void PhysicsRefresh()
+    public void PhysicsRefresh(float dt)
     {
         
     }
@@ -59,37 +60,12 @@ public class Drone : DroneBehavior, IMinion
         
     }
 
-    public void Refresh()
-    {
-        
-    }
-
-    public void RegenHP(float dt)
-    {
-        //throw new System.NotImplementedException();
-    }
-
-    public void TakeDamage()
-    {
-        //to be implemented
-    }
-    
-    public void TakeDamage(float damage)
-    {
-        //throw new System.NotImplementedException();
-    }
-
-    bool PlayerInRange()
-    {
-        return (Vector3.SqrMagnitude(transform.position - player.position) < playerDetectionRange);
-    }
-
-    public void Update()
+    public void Refresh(float dt)
     {
         player = player ?? PlayerManager.Instance.pilot.transform;
         mothership = MotherShipClass.motherShip;
 
-        
+
 
         if (networkObject == null)
             return;
@@ -115,12 +91,47 @@ public class Drone : DroneBehavior, IMinion
             networkObject.SendRpc(RPC_SHOOT_MISSILE, Receivers.All);
             missileCooldown = 20;
         }
+        missileCooldown -= dt;
+    }
 
+    public void RegenHP(float dt)
+    {
+        //throw new System.NotImplementedException();
+    }
+
+    public void TakeDamage()
+    {
+        
+    }
+    
+    public void TakeDamage(float damage)
+    {
+        CharStats.health -= damage;
+        if(CharStats.health <= 0)
+        {
+            Explode();
+            Die();
+        }
+    }
+
+    bool PlayerInRange()
+    {
+        return (Vector3.SqrMagnitude(transform.position - player.position) < playerDetectionRange);
+    }
+
+    public void Update()
+    {
+        
         
     }
 
     //AI Logic
-    
+     void Explode()
+    {
+        // Explosion effect goes here. Sound line is put in first cause sound takes a bit to load
+        AudioSource.PlayClipAtPoint(AudioManager.Instance.soundDict["explosionSound"], transform.position);
+        ParticleFactory.Instance.CreateParticle(ParticleFactory.ParticleType.HomingMissileExplosion, transform.position, Quaternion.identity);
+    }
 
     public override void ShootMissile(RpcArgs args)
     {

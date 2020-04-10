@@ -55,7 +55,7 @@ public class EnemyManager
         {
             if (e.IsAlive)
             {
-                e.Refresh();
+                e.Refresh(dt);
             }
         }
 

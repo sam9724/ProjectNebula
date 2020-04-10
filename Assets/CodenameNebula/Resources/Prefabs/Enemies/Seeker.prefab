@@ -169,6 +169,7 @@ GameObject:
   - component: {fileID: 1444371269171241436}
   - component: {fileID: 1537073241449407422}
   - component: {fileID: -3193827241337333407}
+  - component: {fileID: 8593173805306947358}
   m_Layer: 12
   m_Name: Seeker
   m_TagString: Untagged
@@ -246,6 +247,20 @@ MonoBehaviour:
   MovementSpeed: 5
   sphereRadius: 1.5
   sweepDistance: 2
+--- !u!136 &8593173805306947358
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1443061149298291272}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 1.73
+  m_Height: 5.68
+  m_Direction: 0
+  m_Center: {x: 0, y: 1.21, z: 0}
 --- !u!1 &1443061150222684166
 GameObject:
   m_ObjectHideFlags: 0

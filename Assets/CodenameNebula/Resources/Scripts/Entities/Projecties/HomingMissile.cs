@@ -63,7 +63,8 @@ public class HomingMissile : Projectile, IDamagable // Since Homing missiles can
 
     protected override void Explode()
     {
-        // Explosion effect goes here.
+        // Explosion effect goes here. Sound line is put in first cause sound takes a bit to load
+        AudioSource.PlayClipAtPoint(AudioManager.Instance.soundDict["explosionSound"], transform.position);
         ParticleFactory.Instance.CreateParticle(ParticleFactory.ParticleType.HomingMissileExplosion, transform.position,Quaternion.identity);
     }
 
