@@ -15,7 +15,7 @@ public class LookAtCam : MonoBehaviour
 
         enemy = enemy ?? transform.parent.gameObject.GetComponent<IBaseEnemy>();
         healthBar = healthBar ?? transform.Find("Life/lifeBarEnemy").GetComponent<Image>();
-        if(cameraToLookAt != null)
+        if(PlayerManager.Instance.gunner.GunnerCanvas != null)
         {
             Vector3 v = cameraToLookAt.transform.position - transform.position;
             v.x = v.z = 0.0f;

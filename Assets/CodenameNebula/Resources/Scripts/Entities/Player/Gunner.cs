@@ -25,7 +25,7 @@ public class Gunner : GunnerBehavior, IBasePlayer
     public Vector3 target;
     [HideInInspector]
     public float bulletSpeed = 40;
-    GameObject GunnerCanvas;
+    public GameObject GunnerCanvas;
     Transform gunBase;
     Transform barrel;
 
