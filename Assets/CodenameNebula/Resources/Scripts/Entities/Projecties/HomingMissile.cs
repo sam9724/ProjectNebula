@@ -3,8 +3,10 @@ using System.Collections;
 
 public class HomingMissile : Projectile, IDamagable // Since Homing missiles can be shot down
 {
-    
 
+    Transform player;
+    public float MovementSpeed = 5f;
+    public float rotateSpeed = 5f;
     protected override void HitTarget(IDamagable targetHit, string layerName)
     {
         //throw new System.NotImplementedException();
@@ -13,13 +15,14 @@ public class HomingMissile : Projectile, IDamagable // Since Homing missiles can
     // Use this for initialization
     void Start()
     {
-
+        player = player ?? PlayerManager.Instance.pilot.transform;
     }
 
 
     protected override void FollowTarget(float dt)
     {
-        //missile follow
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(transform.position - player.position), rotateSpeed * Time.deltaTime);
+        transform.position += transform.forward * MovementSpeed * Time.deltaTime;
     }
 
     // Update is called once per frame

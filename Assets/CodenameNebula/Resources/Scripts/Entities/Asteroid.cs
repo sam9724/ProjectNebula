@@ -7,13 +7,13 @@ public class Asteroid : MonoBehaviour, IDamagable, IManagable
     private float tumble = 0.2f;
     public void Die()
     {
-        //to be implemented;
+        AstroidManager.Instance.DestroyAsteroid(this.gameObject);
     }
 
     public void TakeDamage(float damage)
     {
         //temp
-        GameObject.Destroy(gameObject);
+        //GameObject.Destroy(gameObject);
     }
 
     // Use this for initialization

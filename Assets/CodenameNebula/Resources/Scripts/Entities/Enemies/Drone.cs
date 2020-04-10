@@ -8,12 +8,12 @@ using UnityEngine;
 public class Drone : DroneBehavior, IMinion
 {
 
-    public float playerDetectionRange = 225f;
+    public float playerDetectionRange = 100f;
     public float rotateSpeed = 5f;
     public float MovementSpeed = 5f;
-    public float sphereRadius;
-    public float sweepDistance;
     Transform player;
+    Transform mothership;
+    Transform missileLocation;
 
     public bool MoveWithBoss { get; set; }
     public bool SeekPlayer { get; set; }
@@ -37,6 +37,11 @@ public class Drone : DroneBehavior, IMinion
     {
         
     }*/
+
+    public void Start()
+    {
+        missileLocation = transform.Find("missilePos");
+    }
 
     public void Initialize()
     {
@@ -81,7 +86,11 @@ public class Drone : DroneBehavior, IMinion
     public void Update()
     {
         player = player ?? PlayerManager.Instance.pilot.transform;
-        /*if (networkObject == null)
+        mothership = MotherShipClass.motherShip;
+
+        
+
+        if (networkObject == null)
             return;
 
         // If we are not the owner of this network object then we should
@@ -91,8 +100,19 @@ public class Drone : DroneBehavior, IMinion
             transform.position = networkObject.position;
             transform.rotation = networkObject.rotation;
             return;
-        }*/
+        }
+        else
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(transform.position - mothership.position), rotateSpeed * Time.deltaTime);
+            transform.position += transform.forward * MovementSpeed * Time.deltaTime;
+            networkObject.position = transform.position;
+            networkObject.rotation = transform.rotation;
+        }
         Debug.Log("player" + player.name);
+        if (PlayerInRange())
+        {
+            //rpc call this
+        }
 
         
     }
@@ -102,7 +122,7 @@ public class Drone : DroneBehavior, IMinion
 
     public override void ShootMissile(RpcArgs args)
     {
-        throw new System.NotImplementedException();
+        ProjectileFactory.Instance.CreateProjectile(ProjectileFactory.ProjectileType.HomingMissile, missileLocation.position, player.position, Quaternion.identity, 10);
     }
 }
 

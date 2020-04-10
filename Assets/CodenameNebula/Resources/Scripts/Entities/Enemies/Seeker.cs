@@ -13,7 +13,7 @@ public class Seeker : SeekerBehavior, IMinion
     Transform player;
     public float sphereRadius = 1.5f;
     public float sweepDistance = 2f;
-
+    Transform barrel;
     public bool MoveWithBoss { get; set; }
     public bool SeekPlayer { get; set; }
     public bool ChasePlayer { get; set; }
@@ -26,6 +26,11 @@ public class Seeker : SeekerBehavior, IMinion
         // stub implementation
         return this;
     }*/
+
+    void Start()
+    {
+        barrel = transform.Find("Barrel");
+    }
 
     public void Die()
     {
@@ -75,6 +80,11 @@ public class Seeker : SeekerBehavior, IMinion
     bool PlayerInRange()
     {
         return (Vector3.SqrMagnitude(transform.position - player.position) < playerDetectionRange);
+    }
+
+    public void Shoot()
+    {
+        networkObject.SendRpc(RPC_SHOOT_LASER, Receivers.All);
     }
 
     public void Update()
@@ -147,10 +157,7 @@ public class Seeker : SeekerBehavior, IMinion
         //see if there's anything around you
     }
 
-    public override void ShootLaser(RpcArgs args)
-    {
-        throw new System.NotImplementedException();
-    }
 
-    // public override void ShootLaser(RpcArgs args) => ProjectileFactory.Instance.CreateProjectile(ProjectileFactory.ProjectileType.Laser, muzzle.position, player, 50);
+
+     public override void ShootLaser(RpcArgs args) => ProjectileFactory.Instance.CreateProjectile(ProjectileFactory.ProjectileType.Laser, barrel.position, player.position ,Quaternion.identity, 50);
 }

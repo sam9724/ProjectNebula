@@ -45,6 +45,12 @@ public class AstroidManager
         makeRocks();
     }
 
+    public void DestroyAsteroid(GameObject go)
+    {
+        GameObject.Destroy(go);
+        asteroidList.Remove(go);
+    }
+
     void makeRocks()
     {
         for (int x = 0; x < a; x++)
