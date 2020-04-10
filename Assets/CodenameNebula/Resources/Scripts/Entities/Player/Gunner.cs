@@ -156,7 +156,11 @@ public class Gunner : GunnerBehavior, IBasePlayer
         else if (currentGunHeat <= 0)
             gunOverheat = false;
     }
-    public override void Shoot(RpcArgs args) => ProjectileFactory.Instance.CreateProjectile(ProjectileFactory.ProjectileType.Rail, muzzle.position, target, Quaternion.identity, bulletSpeed);
+    public override void Shoot(RpcArgs args)
+    {
+        ProjectileFactory.Instance.CreateProjectile(ProjectileFactory.ProjectileType.Rail, muzzle.position, target, Quaternion.identity, bulletSpeed);
+        AudioSource.PlayClipAtPoint(AudioManager.Instance.soundDict["rail"], muzzle.position);
+    }
 
     Vector3 CalculateGyroDelta()
     {

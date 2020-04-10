@@ -11,7 +11,7 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
     public bool Wander { get; set; }
     public CharacterStats CharStats { get; set; }
     public bool IsAlive { get; set; }
-    public DestructorBeam destructorBeam;
+    //public DestructorBeam destructorBeam;
 
     float shieldCooldown;
     float cloakCooldown;
@@ -40,7 +40,7 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
     {
         //EnemyManager.Instance.EnemyDied(this);
         //isAlive = false;
-
+        gameObject.SetActive(false);
         //game win message
     }
 
@@ -138,8 +138,9 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
 
     public override void fireBeam(RpcArgs args)
     {
-        destructorBeam =(DestructorBeam) ProjectileFactory.Instance.CreateProjectile(ProjectileFactory.ProjectileType.DestructionBeam, transform.position, player.position , Quaternion.identity, 10f); ;
-        
+        //destructorBeam =(DestructorBeam) 
+        ProjectileFactory.Instance.CreateProjectile(ProjectileFactory.ProjectileType.DestructorBeam, transform.position, player.position , Quaternion.identity, 10f); ;
+        AudioSource.PlayClipAtPoint(AudioManager.Instance.soundDict["destructorBeam"], transform.position);
     }
 
     public override void spawnMinions(RpcArgs args)

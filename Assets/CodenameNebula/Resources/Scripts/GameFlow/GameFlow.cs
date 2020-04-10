@@ -23,6 +23,7 @@ public class GameFlow
         ProjectileManager.Instance.Initialize();
         ParticleManager.Instance.Initialize();
         AstroidManager.Instance.Initialize();
+        AudioManager.Instance.Initialize();
     }
 
     public void PostInitialize()

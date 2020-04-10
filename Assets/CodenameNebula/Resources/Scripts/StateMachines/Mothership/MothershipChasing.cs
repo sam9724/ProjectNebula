@@ -22,10 +22,10 @@ public class MothershipChasing : StateMachineBehaviour
     {
         FollowToAPoint(player.position); //        animator.ApplyBuiltinRootMotion();
        
-        //if(EnemyManager.Instance.minionInScene()<1)
+        if(EnemyManager.Instance.minionInScene()<1)
         {
             minionsTimer += Time.deltaTime;
-           //if (minionsTimer > 5f)
+           if (minionsTimer > 5f)
             {
                // EnemyManager.Instance.NumberOfMinionsToSpawn(3, 2);
                 minionsTimer = 0f;

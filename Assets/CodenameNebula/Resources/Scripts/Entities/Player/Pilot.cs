@@ -138,7 +138,7 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
 
     public void Die()
     {
-        //to be implemented
+        gameObject.SetActive(false);
     }
 
     public void TakeShieldDamage(float damage)
