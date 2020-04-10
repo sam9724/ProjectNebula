@@ -139,8 +139,8 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
     public override void fireBeam(RpcArgs args)
     {
         //destructorBeam =(DestructorBeam) 
-        ProjectileFactory.Instance.CreateProjectile(ProjectileFactory.ProjectileType.DestructorBeam, transform.position, player.position , Quaternion.identity, 10f); ;
-        AudioSource.PlayClipAtPoint(AudioManager.Instance.soundDict["destructorBeam"], transform.position);
+        //ProjectileFactory.Instance.CreateProjectile(ProjectileFactory.ProjectileType.DestructorBeam, transform.position, player.position , Quaternion.identity, 10f); ;
+        //AudioSource.PlayClipAtPoint(AudioManager.Instance.soundDict["destructorBeam"], transform.position);
     }
 
     public override void spawnMinions(RpcArgs args)

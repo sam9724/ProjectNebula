@@ -113,10 +113,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f50f2f0f4a4548943844fe1fb4494e13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destructorBeam: {fileID: 0}
-  playerDetectionRange: 2500
+  playerDetectionRange: 125
   rotateSpeed: 0.15
-  MovementSpeed: 4
+  MovementSpeed: 3
   idleMovement: 0.005
   MinionsSpawnLocation: {fileID: 7057162318977039139}
   motherShipAnimator: {fileID: 7057162320259732464}
