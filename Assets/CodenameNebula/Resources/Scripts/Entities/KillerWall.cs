@@ -9,7 +9,7 @@ public class KillerWall : MonoBehaviour
     {
         if (other.gameObject.TryGetComponent<Pilot>(out Pilot player))
         {
-            player.TakeDamage(200);
+            //player.TakeDamage(200);
         }
     }
 }

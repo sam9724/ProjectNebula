@@ -29,7 +29,7 @@ public class MothershipChasing : StateMachineBehaviour
             minionsTimer += Time.deltaTime;
             if (minionsTimer > 5f)
             {
-                //EnemyManager.Instance.NumberOfMinionsToSpawn(3, 2);
+                EnemyManager.Instance.NumberOfMinionsToSpawn(3, 2);
                 minionsTimer = 0f;
                 if (cloackTimer <= 1f)
                 {
