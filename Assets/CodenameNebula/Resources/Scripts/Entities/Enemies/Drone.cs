@@ -15,7 +15,7 @@ public class Drone : DroneBehavior, IMinion
     Transform player;
     Transform mothership;
     Transform missileLocation;
-    float missileCooldown = 20f;
+    float missileCooldown = 0f;
     public bool MoveWithBoss { get; set; }
     public bool SeekPlayer { get; set; }
     public bool ChasePlayer { get; set; }
@@ -89,7 +89,7 @@ public class Drone : DroneBehavior, IMinion
 
 
 
-            transform.RotateAround(mothership.position, mothership.forward, 10f * dt);
+            transform.RotateAround(mothership.position, mothership.up, 10f * dt);
             Vector3 delta = transform.position - mothership.position;
             delta.y = 0; // Keep same Y level
             transform.position = mothership.position + delta.normalized * TargetDistance;
@@ -98,7 +98,7 @@ public class Drone : DroneBehavior, IMinion
 
 
         //transform.position += transform.forward * MovementSpeed * dt;
-        networkObject.position = transform.position;
+            networkObject.position = transform.position;
             networkObject.rotation = transform.rotation;
 
         //Debug.Log("player" + player.name);

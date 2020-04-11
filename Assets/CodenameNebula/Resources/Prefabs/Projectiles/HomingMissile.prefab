@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3334310}
   - component: {fileID: 2372238}
   - component: {fileID: 7734734806354116972}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: HomingMissile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,3 +97,4 @@ MonoBehaviour:
   speed: 10
   MovementSpeed: 5
   rotateSpeed: 5
+  missileExplosionRange: 5
