@@ -11,6 +11,7 @@ public class Drone : DroneBehavior, IMinion
     public float playerDetectionRange = 100f;
     public float rotateSpeed = 5f;
     public float MovementSpeed = 5f;
+    int TargetDistance = 20;
     Transform player;
     Transform mothership;
     Transform missileLocation;
@@ -50,6 +51,7 @@ public class Drone : DroneBehavior, IMinion
         CharStats = new CharacterStats(10, 0);
         MaxHealth = CharStats.health;
         IsAlive = true;
+        transform.SetParent(mothership);
     }
 
     public void Initialize()
@@ -83,9 +85,20 @@ public class Drone : DroneBehavior, IMinion
         }
 
             //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(transform.position - mothership.position), rotateSpeed * dt);
-            transform.RotateAround(mothership.transform.position, mothership.transform.forward, 50 * dt);
-            //transform.position += transform.forward * MovementSpeed * dt;
-            networkObject.position = transform.position;
+            //transform.RotateAround(mothership.transform.position, mothership.transform.forward, 50 * dt);
+
+
+
+            transform.RotateAround(mothership.position, mothership.forward, 10f * dt);
+            Vector3 delta = transform.position - mothership.position;
+            delta.y = 0; // Keep same Y level
+            transform.position = mothership.position + delta.normalized * TargetDistance;
+
+
+
+
+        //transform.position += transform.forward * MovementSpeed * dt;
+        networkObject.position = transform.position;
             networkObject.rotation = transform.rotation;
 
         //Debug.Log("player" + player.name);
