@@ -19,11 +19,11 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
 
     public float maxHealth;
     public float maxShield;
-    float healthRegen = 2;
+    float healthRegen = 0.25f;
     float notUnderAttackTimer;
     float regenCooldown = 4;
 
-    float shieldRegen = 5;
+    float shieldRegen = 0.5f;
     float shieldRepairSpeed = 1;
     public Rigidbody rb;
 
@@ -49,29 +49,26 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
         gunnerSpawnPos = transform.Find("P2SpawnPoint");
         shield = transform.Find("PlayerShield");
         rb = gameObject.GetComponent<Rigidbody>();
-
+        EndScreen = GameObject.Find("EndScreen");
         Initialize();
     }
 
     void GetEndScreen()
     {
-        EndScreen = GameObject.Find("EndScreen");
-        EndScreen?.transform.Find("EndText").TryGetComponent<Text>(out EndText);
-        EndText.text = "You lose";
-        
+        EndScreen.transform.Find("EndText").GetComponent<Text>().text = "You lose";
         GameFlow.Instance.isPaused = true;
+        AudioSource.PlayClipAtPoint(AudioManager.Instance.soundDict["gameOver"], PlayerManager.Instance.pilot.transform.position);
     }
     public void Initialize()
     {
-        //GameObject.FindGameObjectWithTag("dynamicjoystick")?.TryGetComponent<DynamicJoystick>(out DynamicJoystick);
-        //GameObject.FindGameObjectWithTag("Altitude")?.TryGetComponent<DynamicJoystick>(out AltitudeJoystick);
         PilotCanvas = GameObject.Find("PilotCanvas");
-        PilotCanvas?.TryGetComponent<DynamicJoystick>(out DynamicJoystick);
-        PilotCanvas?.TryGetComponent<DynamicJoystick>(out AltitudeJoystick);
-        PilotCanvas?.transform.Find("DoubleBar").Find("lifeBar").TryGetComponent<Image>(out healthbar);
-        PilotCanvas?.transform.Find("DoubleBar").Find("shieldBar").TryGetComponent<Image>(out shieldbar);
-
-
+        if (PilotCanvas)
+        {
+            DynamicJoystick = PilotCanvas.transform.Find("Directions").GetComponent<DynamicJoystick>();
+            AltitudeJoystick = PilotCanvas.transform.Find("Altitude").GetComponent<DynamicJoystick>();
+            healthbar = PilotCanvas.transform.Find("DoubleBar/lifeBar").GetComponent<Image>();
+            shieldbar = PilotCanvas.transform.Find("DoubleBar/shieldBar").GetComponent<Image>();
+        }
 
         CharStats = new CharacterStats();
         maxHealth = CharStats.health;
@@ -125,7 +122,7 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
         //if (transform.rotation.x > -30f && transform.position.x < 30f)
         {
             Vector3 altitudeTilt = transform.forward * AltitudeJoystick.Vertical;
-            Debug.Log("Altitude"+altitudeTilt);
+            //Debug.Log("Altitude"+altitudeTilt);
             transform.Rotate(-altitudeTilt.z, 0, 0);
         }
 #else
@@ -149,10 +146,13 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
 
         }
 
-
-        //Changing healthbar and shieldbar values
-        healthbar.fillAmount = CharStats.health / maxHealth;
-        shieldbar.fillAmount = CharStats.shield / maxShield;
+        if (PilotCanvas)
+        {
+            //Changing healthbar and shieldbar values
+            healthbar.fillAmount = CharStats.health / maxHealth;
+            shieldbar.fillAmount = CharStats.shield / maxShield;
+        }
+       
 
         //Debug.Log(CharStats.health);
             
@@ -177,9 +177,10 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
 
     public void Die()
     {
-        //gameObject.SetActive(false);
-        GetEndScreen();
-        GameFlow.Instance.isPaused = true;
+        if (PilotCanvas) // This will be null on Gunner's device.
+        {
+            GetEndScreen();
+        }        
     }
 
     public void TakeShieldDamage(float damage)

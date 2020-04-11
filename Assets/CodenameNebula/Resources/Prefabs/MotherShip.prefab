@@ -114,6 +114,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f50f2f0f4a4548943844fe1fb4494e13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isOwner: 0
   playerDetectionRange: 80000
   rotateSpeed: 0.15
   MovementSpeed: 3
@@ -121,11 +122,14 @@ MonoBehaviour:
   MinionsSpawnLocation: {fileID: 7057162318977039139}
   motherShipAnimator: {fileID: 7057162320259732464}
   xMin: 0
-  xMax: 100
+  xMax: 400
   yMin: 0
-  yMax: 50
+  yMax: 100
   zMin: 0
-  zMax: 100
+  zMax: 700
+  isCloaked: 0
+  activateCloak: 0
+  deactivateCloak: 0
 --- !u!136 &7383755901318136646
 CapsuleCollider:
   m_ObjectHideFlags: 0

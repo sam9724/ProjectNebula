@@ -24,7 +24,7 @@ public class Gunner : GunnerBehavior, IBasePlayer
     [HideInInspector]
     public Vector3 target;
     [HideInInspector]
-    public float bulletSpeed = 40;
+    public float bulletSpeed = 15;
     public GameObject GunnerCanvas;
     Transform gunBase;
     Transform barrel;
@@ -45,7 +45,6 @@ public class Gunner : GunnerBehavior, IBasePlayer
     Vector3 screenCenter;
     public Camera mainCamera;
     GameObject EndScreen;
-    Text EndText;
 
     //required coz we don't control the spawning of networked objects in the scene.
     public void Start()
@@ -57,18 +56,19 @@ public class Gunner : GunnerBehavior, IBasePlayer
         muzzle = barrel.Find("Muzzle");
         CharStats = new CharacterStats();
         previousGyroEuler = DeviceRotation.Get().eulerAngles;
-        //offset
-        //GameObject.FindGameObjectWithTag("p2joystick")?.TryGetComponent<DynamicJoystick>(out DynamicJoystick);
-        //barrel.transform.rotation = Quaternion.Euler(barrel.transform.rotation.eulerAngles.x + barrelXoffset, barrel.transform.rotation.eulerAngles.y, barrel.transform.rotation.eulerAngles.z);
-        //GameObject.FindGameObjectWithTag("p2button")?.TryGetComponent<Button>(out shootButton);
-
+        EndScreen = GameObject.Find("EndScreen");
         GunnerCanvas = GameObject.Find("GunnerCanvas");
-        GunnerCanvas?.TryGetComponent<DynamicJoystick>(out DynamicJoystick);
-        GunnerCanvas?.TryGetComponent<Button>(out shootButton);
-        GunnerCanvas?.transform.Find("DoubleBar").Find("lifeBar").TryGetComponent<Image>(out healthbar);
-        GunnerCanvas?.transform.Find("DoubleBar").Find("shieldBar").TryGetComponent<Image>(out shieldbar);
 
-        shootButton?.onClick?.AddListener(onShootButton);
+        if (GunnerCanvas)
+        {
+            DynamicJoystick = GunnerCanvas.transform.Find("Dynamic Joystick").GetComponent<DynamicJoystick>();
+            shootButton = GunnerCanvas.transform.Find("Button").GetComponent<Button>();
+            healthbar = GunnerCanvas.transform.Find("DoubleBar").Find("lifeBar").GetComponent<Image>();
+            shieldbar = GunnerCanvas.transform.Find("DoubleBar").Find("shieldBar").GetComponent<Image>();
+
+            shootButton.onClick.AddListener(onShootButton);
+        }
+        
 
         screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, 0);
         mainCamera = Camera.main;
@@ -80,18 +80,17 @@ public class Gunner : GunnerBehavior, IBasePlayer
 
     public void Die()
     {
-        //gameObject.SetActive(false);
-        GetEndScreen();
-        GameFlow.Instance.isPaused = true;
+        if (GunnerCanvas) // GunnerCanvas will be null if  this runs on Pilot's device and hence not required.
+        {
+            GetEndScreen();
+        }
     }
 
     void GetEndScreen()
     {
-        EndScreen = GameObject.Find("EndScreen");
-        EndScreen?.transform.Find("EndText").TryGetComponent<Text>(out EndText);
-        EndText.text = "You lose";
-        
+        EndScreen.transform.Find("EndText").GetComponent<Text>().text = "You lose";
         GameFlow.Instance.isPaused = true;
+        AudioSource.PlayClipAtPoint(AudioManager.Instance.soundDict["gameOver"], PlayerManager.Instance.pilot.transform.position);
     }
 
     // Use this for initialization
@@ -161,12 +160,21 @@ public class Gunner : GunnerBehavior, IBasePlayer
 
         //gunCounter += dt;
 
+        if (GunnerCanvas)
+        {
+            healthbar.fillAmount = PlayerManager.Instance.pilot.CharStats.health / PlayerManager.Instance.pilot.maxHealth;
+            shieldbar.fillAmount = PlayerManager.Instance.pilot.CharStats.shield / PlayerManager.Instance.pilot.maxShield;
+        }
 
-        healthbar.fillAmount = PlayerManager.Instance.pilot.CharStats.health/ PlayerManager.Instance.pilot.maxHealth;
-        shieldbar.fillAmount = PlayerManager.Instance.pilot.CharStats.shield/ PlayerManager.Instance.pilot.maxShield;
 
-        Debug.Log(PlayerManager.Instance.pilot.CharStats.health);
-        
+        //Gun Heat mechanics
+        if (gunOverheat)
+            currentGunHeat -= dt;
+        currentGunHeat = Mathf.Clamp(currentGunHeat, 0, 4);
+        if (currentGunHeat >= maxGunHeat)
+            gunOverheat = true;
+        else if (currentGunHeat <= 0)
+            gunOverheat = false;
     }
     void onShootButton()
     {
@@ -176,22 +184,11 @@ public class Gunner : GunnerBehavior, IBasePlayer
         {
             currentGunHeat += Time.deltaTime;
             gunCounter = 0;
-            //Ray ray = mainCamera.ScreenPointToRay(screenCenter);
-
-            //target = ray.GetPoint(gunRange);
             target = mainCamera.ScreenPointToRay(screenCenter).GetPoint(gunRange);
             networkObject.target = target;
             networkObject.SendRpc(RPC_SHOOT, Receivers.All);
-        }
-        else
-        {
-            currentGunHeat -= Time.deltaTime;
-        }
-        currentGunHeat = Mathf.Clamp(currentGunHeat, 0, 4);
-        if (currentGunHeat >= maxGunHeat)
-            gunOverheat = true;
-        else if (currentGunHeat <= 0)
-            gunOverheat = false;
+            Handheld.Vibrate();
+        } 
     }
     public override void Shoot(RpcArgs args)
     {

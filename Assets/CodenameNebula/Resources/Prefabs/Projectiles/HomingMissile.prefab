@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 992242ea0f340a64c8bfaf889788ac70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projType: 0
+  projType: 3
   target: {x: 0, y: 0, z: 0}
   speed: 10
   MovementSpeed: 5

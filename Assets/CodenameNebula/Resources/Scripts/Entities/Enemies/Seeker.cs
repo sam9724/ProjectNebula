@@ -37,6 +37,8 @@ public class Seeker : SeekerBehavior, IMinion
         CharStats = new CharacterStats(10, 0);
         MaxHealth = CharStats.health;
         IsAlive = true;
+        transform.SetParent(EnemyManager.Instance.enemyParent);
+        EnemyManager.Instance.toAdd.Push(this);
     }
 
     public void Die()

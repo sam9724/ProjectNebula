@@ -52,6 +52,7 @@ public class Drone : DroneBehavior, IMinion
         MaxHealth = CharStats.health;
         IsAlive = true;
         transform.SetParent(mothership);
+        EnemyManager.Instance.toAdd.Push(this);
     }
 
     public void Initialize()

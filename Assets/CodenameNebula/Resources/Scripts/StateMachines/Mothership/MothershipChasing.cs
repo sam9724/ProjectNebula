@@ -37,13 +37,15 @@ public class MothershipChasing : StateMachineBehaviour
                 if (minionsTimer > 5f)
                 {
                     //EnemyManager.Instance.NumberOfMinionsToSpawn(3, 2);
-                    EnemyManager.Instance.mothership.SpawnMinions(EnemyType.Drones, 1);
-                    EnemyManager.Instance.mothership.SpawnMinions(EnemyType.Seeker, 1);
+                    EnemyManager.Instance.mothership.SpawnMinions(EnemyType.Drones, 3);
+                    EnemyManager.Instance.mothership.SpawnMinions(EnemyType.Seeker, 2);
                     minionsTimer = 0f;
                     if (cloackTimer <= 1f)
                     {
                         cloackTimer += Time.deltaTime;
-                        EnemyManager.Instance.mothership.GetComponentInChildren<MeshRenderer>().material.SetFloat("_CloakSlider", cloackTimer);
+                        //EnemyManager.Instance.mothership.GetComponentInChildren<MeshRenderer>().material.SetFloat("_CloakSlider", cloackTimer);
+                        EnemyManager.Instance.mothership.deactivateCloak = false;
+                        EnemyManager.Instance.mothership.activateCloak = true;
                     }
                     if (cloackTimer >= 1)
                         cloackTimer = 1;
@@ -52,7 +54,9 @@ public class MothershipChasing : StateMachineBehaviour
                 if (cloackTimer >= 0f)
                 {
                     cloackTimer -= Time.deltaTime;
-                    EnemyManager.Instance.mothership.GetComponentInChildren<MeshRenderer>().material.SetFloat("_CloakSlider", cloackTimer);
+                    //EnemyManager.Instance.mothership.GetComponentInChildren<MeshRenderer>().material.SetFloat("_CloakSlider", cloackTimer);
+                    EnemyManager.Instance.mothership.activateCloak = false;
+                    EnemyManager.Instance.mothership.deactivateCloak = true;
                 }
                 if (cloackTimer <= 0)
                     cloackTimer = 0;

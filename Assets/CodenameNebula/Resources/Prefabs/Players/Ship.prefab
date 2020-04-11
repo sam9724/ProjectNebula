@@ -304,6 +304,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerShield
       objectReference: {fileID: 0}
+    - target: {fileID: 2268145466976503139, guid: 9836abb68bc28254ba7523675088755a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2268145466976503151, guid: 9836abb68bc28254ba7523675088755a,
         type: 3}
       propertyPath: m_LocalPosition.x

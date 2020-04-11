@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3951039298125884935}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Muzzle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39,7 +39,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4538755608867911890}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Barrel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -72,7 +72,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4320031611733878848}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Barrel_end 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -102,7 +102,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 873265052434509795}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -134,7 +134,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2443193772069025132}
   - component: {fileID: 1703840882052875388}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: S Barrels
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -218,7 +218,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3645165936654372986}
   - component: {fileID: 750763583296264944}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: S Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -302,7 +302,7 @@ GameObject:
   m_Component:
   - component: {fileID: 110488154390775796}
   - component: {fileID: 234929604842067811}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: RailGun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -345,6 +345,7 @@ MonoBehaviour:
   muzzle: {fileID: 0}
   target: {x: 0, y: 0, z: 0}
   bulletSpeed: 1000
+  GunnerCanvas: {fileID: 0}
   mainCamera: {fileID: 0}
 --- !u!1 &5257085287144612194
 GameObject:
@@ -358,7 +359,7 @@ GameObject:
   - component: {fileID: 5257085287144612198}
   - component: {fileID: 5257085287144612193}
   - component: {fileID: 1111934631219870396}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: GunnerCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}

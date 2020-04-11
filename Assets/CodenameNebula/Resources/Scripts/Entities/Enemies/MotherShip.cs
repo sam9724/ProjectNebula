@@ -44,13 +44,17 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
 
     Vector3 vtemp = Vector3.zero;
 
+    public bool isCloaked = false, activateCloak = false, deactivateCloak = false;
+    Material material;
+    float cloakingShaderSpeed = 0.15f;
+
     public void Die()
     {
         //EnemyManager.Instance.EnemyDied(this);
         //isAlive = false;
         //gameObject.SetActive(false);
         GetEndScreen();
-        GameFlow.Instance.isPaused = true;
+        AudioSource.PlayClipAtPoint(AudioManager.Instance.soundDict["win"], PlayerManager.Instance.pilot.transform.position);
         //game win message
     }
 
@@ -79,7 +83,8 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
         IsAlive = true;
         CharStats = new CharacterStats(100, 0);
         MaxHealth = CharStats.health;
-
+        EndScreen = GameObject.Find("EndScreen");
+        material = transform.Find("F3_Green Variant").GetComponent<Renderer>().material;
     }
 
     public void Initialize()
@@ -93,11 +98,8 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
     }
 
     void GetEndScreen()
-    {
-        EndScreen = GameObject.Find("EndScreen");
-        EndScreen?.transform.Find("EndText").TryGetComponent<Text>(out EndText);
-        EndText.text = "You win!";
-        EndScreen.SetActive(true);
+    { 
+        EndScreen.transform.Find("EndText").GetComponent<Text>().text = "You win!";
         GameFlow.Instance.isPaused = true;
     }
 
@@ -106,34 +108,24 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
         
     }
 
-    public IBaseEnemy SpawnMinions(EnemyType etype, int qty)
+    public void SpawnMinions(EnemyType etype, int qty)
     {
-        IBaseEnemy e = null;
         for (int i = 0; i < qty; i++)
         {
-            //newEnemy.transform.position += MotherShipClass.MinionsSpawnLocation.position;
-            //Debug.Log("New Enemy Created");
-            // NetworkManager.Instance.InstantiateMothership(0, new Vector3(200, 25, 50));
-
             if (etype == EnemyType.Seeker)
             {
-                e = (IBaseEnemy)NetworkManager.Instance.InstantiateSeeker(0, MotherShipClass.MinionsSpawnLocation.position, Quaternion.identity);
+                NetworkManager.Instance.InstantiateSeeker(0, MotherShipClass.MinionsSpawnLocation.position, Quaternion.identity);
             }
             else if (etype == EnemyType.Drones)
             {
-                e = (IBaseEnemy)NetworkManager.Instance.InstantiateDrone(0, MotherShipClass.MinionsSpawnLocation.position, Quaternion.identity);
+                NetworkManager.Instance.InstantiateDrone(0, MotherShipClass.MinionsSpawnLocation.position, Quaternion.identity);
             }
-
-            //((MonoBehaviour)e).transform.SetParent(enemyParent);
-            e.Initialize();
-            EnemyManager.Instance.toAdd.Push(e);
         }
-        return e;
     }
 
     public void Update()
     {
-        player = player ?? PlayerManager.Instance.pilot.transform;
+
         if (networkObject == null)
             return;
 
@@ -143,6 +135,7 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
         {
             transform.position = networkObject.position;
             transform.rotation = networkObject.rotation;
+            material.SetFloat("_CloakSlider", networkObject.cloakValue);
             return;
         }
         //Debug.Log("player" + player.name);
@@ -157,6 +150,17 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
         else
         {
             motherShipAnimator.SetBool("PlayerInRange", false);
+        }
+
+        float dt = Time.deltaTime;
+        networkObject.cloakValue = material.GetFloat("_CloakSlider");
+        if (!isCloaked && activateCloak)
+        {
+            Cloak(dt);
+        }
+        if (isCloaked && deactivateCloak)
+        {
+            UnCloak(dt);
         }
     }
 
@@ -173,7 +177,7 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
         CharStats.health -= damage;
         if (CharStats.health <= 0)
         {
-            Debug.Log("Mothership Hp: " + CharStats.health);
+            //Debug.Log("Mothership Hp: " + CharStats.health);
             Die();
             IsAlive = false;
         }
@@ -186,14 +190,10 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
 
     public override void fireBeam(RpcArgs args)
     {
+        //Buggy code commented out
         //destructorBeam =(DestructorBeam) 
         //ProjectileFactory.Instance.CreateProjectile(ProjectileFactory.ProjectileType.DestructorBeam, transform.position, player.position , Quaternion.identity, 10f); ;
         //AudioSource.PlayClipAtPoint(AudioManager.Instance.soundDict["destructorBeam"], transform.position);
-    }
-
-    public override void spawnMinions(RpcArgs args)
-    {
-        //throw new System.NotImplementedException();
     }
 
     public void Refresh(float dt)
@@ -221,5 +221,18 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
         //throw new System.NotImplementedException();
     }
 
+    public void Cloak(float dt)
+    {
+        material.SetFloat("_CloakSlider", Mathf.Lerp(0, 1, cloakingShaderSpeed ));
+        if (networkObject.cloakValue >= 1)
+            isCloaked = true;
+    }
+
+    public void UnCloak(float dt)
+    {
+        material.SetFloat("_CloakSlider", Mathf.Lerp(1, 0, cloakingShaderSpeed * dt));
+        if (networkObject.cloakValue <= 0)
+            isCloaked = false;
+    }
     //AI Logic in state behavior scripts
 }

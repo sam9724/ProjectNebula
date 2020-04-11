@@ -42,7 +42,7 @@ public abstract class Projectile : MonoBehaviour, IPoolable
                 Died();
                 return;
             } 
-            else if(transform.position == target)
+            if(transform.position == target)
             {
                 Explode();
                 Died();

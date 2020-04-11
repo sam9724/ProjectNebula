@@ -20,7 +20,7 @@ public class AstroidManager
 
     [SerializeField]
     private GameObject blockPrefab;
-    public int a = 400, b = 100, c = 1000;
+    public int a = 400, b = 100, c = 700;
     [SerializeField]
     private float noiseScale = 2.07f;
     public int seed = 65766;

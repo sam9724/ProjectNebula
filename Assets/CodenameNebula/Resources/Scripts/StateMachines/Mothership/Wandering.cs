@@ -30,8 +30,8 @@ public class Wandering : StateMachineBehaviour
             if (TempTime > 60f)
             {
                 //EnemyManager.Instance.NumberOfMinionsToSpawn(3, 2);
-                EnemyManager.Instance.mothership.SpawnMinions(EnemyType.Drones, 1);
-                EnemyManager.Instance.mothership.SpawnMinions(EnemyType.Seeker, 1);
+                EnemyManager.Instance.mothership.SpawnMinions(EnemyType.Drones, 3);
+                EnemyManager.Instance.mothership.SpawnMinions(EnemyType.Seeker, 2);
                 TempTime = 0;
             }
         }
