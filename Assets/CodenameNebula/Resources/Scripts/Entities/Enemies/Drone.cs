@@ -44,6 +44,8 @@ public class Drone : DroneBehavior, IMinion
 
     public void Start()
     {
+        player =  PlayerManager.Instance.pilot.transform;
+        mothership = EnemyManager.Instance.mothership.transform;
         missileLocation = transform.Find("missilePos");
         CharStats = new CharacterStats(10, 0);
         MaxHealth = CharStats.health;
@@ -67,10 +69,6 @@ public class Drone : DroneBehavior, IMinion
 
     public void Refresh(float dt)
     {
-        player = player ?? PlayerManager.Instance.pilot.transform;
-        mothership = MotherShipClass.motherShip;
-
-
 
         if (networkObject == null)
             return;
@@ -83,13 +81,13 @@ public class Drone : DroneBehavior, IMinion
             transform.rotation = networkObject.rotation;
             return;
         }
-        else
-        {
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(transform.position - mothership.position), rotateSpeed * Time.deltaTime);
-            transform.position += transform.forward * MovementSpeed * Time.deltaTime;
+
+            //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(transform.position - mothership.position), rotateSpeed * dt);
+            transform.RotateAround(mothership.transform.position, mothership.transform.forward, 50 * dt);
+            //transform.position += transform.forward * MovementSpeed * dt;
             networkObject.position = transform.position;
             networkObject.rotation = transform.rotation;
-        }
+
         //Debug.Log("player" + player.name);
         if (PlayerInRange() && missileCooldown == 0)
         {

@@ -154,7 +154,7 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
         healthbar.fillAmount = CharStats.health / maxHealth;
         shieldbar.fillAmount = CharStats.shield / maxShield;
 
-        Debug.Log(CharStats.health);
+        //Debug.Log(CharStats.health);
             
     }
 

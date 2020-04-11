@@ -32,6 +32,7 @@ public class Seeker : SeekerBehavior, IMinion
 
     void Start()
     {
+        player = PlayerManager.Instance.pilot.transform;
         barrel = transform.Find("Barrel");
         CharStats = new CharacterStats(10, 0);
         MaxHealth = CharStats.health;
@@ -67,12 +68,23 @@ public class Seeker : SeekerBehavior, IMinion
 
     public void Refresh(float dt)
     {
-        player = player ?? PlayerManager.Instance.pilot.transform;
+        //player = player ?? PlayerManager.Instance.pilot.transform;
 
         //Debug.Log("player" + player.name);
 
         if (networkObject == null)
             return;
+
+
+
+        if (!networkObject.IsOwner)
+        {
+            transform.position = networkObject.position;
+            transform.rotation = networkObject.rotation;
+            return;
+        }
+
+
 
         if (PlayerInRange())
         {
@@ -95,6 +107,8 @@ public class Seeker : SeekerBehavior, IMinion
 
             GoToPlayer();
         }
+        networkObject.position = transform.position;
+        networkObject.rotation = transform.rotation;
     }
 
     public void RegenHP(float dt)

@@ -5,7 +5,7 @@ using BeardedManStudios.Forge.Networking.Unity;
 
 public enum EnemyType { Seeker, Drones }
 
-public class EnemyManager 
+public class EnemyManager
 {
     #region Singleton
     private static EnemyManager instance;
@@ -49,7 +49,7 @@ public class EnemyManager
     {
 
     }
-    
+
     public void Refresh(float dt)
     {
         foreach (IBaseEnemy e in enemies)
@@ -64,8 +64,8 @@ public class EnemyManager
         {
             IBaseEnemy e = toRemove.Pop();
             GameObject o = (e as MonoBehaviour).gameObject;
-            enemies.Remove(e);            
-           // o.GetComponent<IBaseEnemy>().enabled = false; //.gameObject.SetActive(false);
+            enemies.Remove(e);
+            // o.GetComponent<IBaseEnemy>().enabled = false; //.gameObject.SetActive(false);
             GameObject.Destroy(o, 1f);
         }
 
@@ -79,41 +79,41 @@ public class EnemyManager
         return enemies.Count;
     }
 
-    public void NumberOfMinionsToSpawn(int drone, int seeker)
-    {
-        
-        SpawnMinions(EnemyType.Drones, drone);;
-        SpawnMinions(EnemyType.Seeker, seeker);;
+    //public void NumberOfMinionsToSpawn(int drone, int seeker)
+    //{
 
-    }
-    public IBaseEnemy SpawnMinions(EnemyType etype, int qty)
-    {
-        IBaseEnemy e = null;
-        for (int i = 0; i < qty; i++)
-        {
-            //newEnemy.transform.position += MotherShipClass.MinionsSpawnLocation.position;
-            //Debug.Log("New Enemy Created");
-           // NetworkManager.Instance.InstantiateMothership(0, new Vector3(200, 25, 50));
-            
-            if(etype == EnemyType.Seeker)
-            {
-                e =(IBaseEnemy)NetworkManager.Instance.InstantiateSeeker(0, MotherShipClass.MinionsSpawnLocation.position, Quaternion.identity);
-            }
-            else if (etype == EnemyType.Drones)
-            {
-                e = (IBaseEnemy)NetworkManager.Instance.InstantiateDrone(0, MotherShipClass.MinionsSpawnLocation.position, Quaternion.identity);
-            }
+    //    SpawnMinions(EnemyType.Drones, drone);;
+    //    SpawnMinions(EnemyType.Seeker, seeker);;
 
-            //((MonoBehaviour)e).transform.SetParent(enemyParent);
-            e.Initialize();
-            toAdd.Push(e);
-        }           
-        return e;
-    }
+
+    //public IBaseEnemy SpawnMinions(EnemyType etype, int qty)
+    //{
+    //    IBaseEnemy e = null;
+    //    for (int i = 0; i < qty; i++)
+    //    {
+    //        //newEnemy.transform.position += MotherShipClass.MinionsSpawnLocation.position;
+    //        //Debug.Log("New Enemy Created");
+    //       // NetworkManager.Instance.InstantiateMothership(0, new Vector3(200, 25, 50));
+
+    //        if(etype == EnemyType.Seeker)
+    //        {
+    //            e =(IBaseEnemy)NetworkManager.Instance.InstantiateSeeker(0, MotherShipClass.MinionsSpawnLocation.position, Quaternion.identity);
+    //        }
+    //        else if (etype == EnemyType.Drones)
+    //        {
+    //            e = (IBaseEnemy)NetworkManager.Instance.InstantiateDrone(0, MotherShipClass.MinionsSpawnLocation.position, Quaternion.identity);
+    //        }
+
+    //        //((MonoBehaviour)e).transform.SetParent(enemyParent);
+    //        e.Initialize();
+    //        toAdd.Push(e);
+    //    }           
+    //    return e;
+    //}
 
     public void EnemyDied(IBaseEnemy enemyDied)
     {
         toRemove.Push(enemyDied);
     }
-
 }
+

@@ -1649,7 +1649,7 @@ Transform:
   m_Children:
   - {fileID: 6524229727751008491}
   - {fileID: 5490822550706061624}
-  - {fileID: 3949353506986060064}
+  - {fileID: 7240056943876069531}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1665,7 +1665,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa873fe3760c46349ae7c2e17cb9562b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerDetectionRange: 225
+  playerDetectionRange: 20000
   rotateSpeed: 5
   MovementSpeed: 5
   sphereRadius: 1.5
@@ -1803,7 +1803,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7cb933ff72ad41243a64ad35ba0b49c7, type: 3}
---- !u!224 &3949353506986060064 stripped
+--- !u!224 &7240056943876069531 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5960291427149526445, guid: 7cb933ff72ad41243a64ad35ba0b49c7,
     type: 3}

@@ -378,7 +378,7 @@ Transform:
   m_Children:
   - {fileID: 7694986605288928911}
   - {fileID: 9039259948474661765}
-  - {fileID: 4041035485456822078}
+  - {fileID: 7684144974143381125}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -394,7 +394,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92ff6e247825cfa4abc5fb9e8976718b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerDetectionRange: 100
+  playerDetectionRange: 36000
   rotateSpeed: 5
   MovementSpeed: 5
 --- !u!135 &6038262122620821052
@@ -2131,7 +2131,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7cb933ff72ad41243a64ad35ba0b49c7, type: 3}
---- !u!224 &4041035485456822078 stripped
+--- !u!224 &7684144974143381125 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5960291427149526445, guid: 7cb933ff72ad41243a64ad35ba0b49c7,
     type: 3}

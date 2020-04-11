@@ -15,48 +15,57 @@ public class MothershipChasing : StateMachineBehaviour
     float cloackTimer=0f;
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        mothership = MotherShipClass.motherShip;
-        player = MotherShipClass.player;
-        minionsTimer = 0;
+        
+        if (EnemyManager.Instance.mothership.isOwner)
+        {
+            mothership = MotherShipClass.motherShip;
+            player = MotherShipClass.player;
+            minionsTimer = 0;
+        }
     }
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        FollowToAPoint(player.position); //        animator.ApplyBuiltinRootMotion();
-       
-       // Debug.Log("MAterial: "+EnemyManager.Instance.mothership.GetComponentInChildren<MeshRenderer>().material.name);// SetFloat("CloakSlider",1);
-        if(EnemyManager.Instance.minionInScene()<1)
+
+        if (EnemyManager.Instance.mothership.isOwner)
         {
-            minionsTimer += Time.deltaTime;
-            if (minionsTimer > 5f)
+            FollowToAPoint(player.position); //        animator.ApplyBuiltinRootMotion();
+
+            // Debug.Log("MAterial: "+EnemyManager.Instance.mothership.GetComponentInChildren<MeshRenderer>().material.name);// SetFloat("CloakSlider",1);
+            if (EnemyManager.Instance.minionInScene() < 1)
             {
-                EnemyManager.Instance.NumberOfMinionsToSpawn(3, 2);
-                minionsTimer = 0f;
-                if (cloackTimer <= 1f)
+                minionsTimer += Time.deltaTime;
+                if (minionsTimer > 5f)
                 {
-                    cloackTimer += Time.deltaTime;
+                    //EnemyManager.Instance.NumberOfMinionsToSpawn(3, 2);
+                    EnemyManager.Instance.mothership.SpawnMinions(EnemyType.Drones, 1);
+                    EnemyManager.Instance.mothership.SpawnMinions(EnemyType.Seeker, 1);
+                    minionsTimer = 0f;
+                    if (cloackTimer <= 1f)
+                    {
+                        cloackTimer += Time.deltaTime;
+                        EnemyManager.Instance.mothership.GetComponentInChildren<MeshRenderer>().material.SetFloat("_CloakSlider", cloackTimer);
+                    }
+                    if (cloackTimer >= 1)
+                        cloackTimer = 1;
+                }
+
+                if (cloackTimer >= 0f)
+                {
+                    cloackTimer -= Time.deltaTime;
                     EnemyManager.Instance.mothership.GetComponentInChildren<MeshRenderer>().material.SetFloat("_CloakSlider", cloackTimer);
                 }
-                if (cloackTimer >= 1)
-                    cloackTimer = 1;
-            }
-
-            if (cloackTimer >= 0f)
-            {
-                cloackTimer -= Time.deltaTime;
-                EnemyManager.Instance.mothership.GetComponentInChildren<MeshRenderer>().material.SetFloat("_CloakSlider", cloackTimer);
-            }
-            if (cloackTimer <= 0)
-                cloackTimer = 0;
+                if (cloackTimer <= 0)
+                    cloackTimer = 0;
 
                 //EnemyManager.Instance.mothership.shoot();
                 if (Physics.Raycast(mothership.position, mothership.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
                 {
                     Debug.DrawRay(mothership.position, mothership.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
                     raycastHit(hit);
-                    
+
 
                 }
-                if(Physics.Raycast(new Vector3(mothership.position.x,mothership.position.y-(mothership.localScale.y/2),mothership.position.z), mothership.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
+                if (Physics.Raycast(new Vector3(mothership.position.x, mothership.position.y - (mothership.localScale.y / 2), mothership.position.z), mothership.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
                 {
                     Debug.DrawRay(new Vector3(mothership.position.x, mothership.position.y - (mothership.localScale.y / 2), mothership.position.z), mothership.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
                     raycastHit(hit);
@@ -68,25 +77,28 @@ public class MothershipChasing : StateMachineBehaviour
                 }//
                 if (Physics.Raycast(new Vector3(mothership.position.x - (mothership.localScale.x / 2), mothership.position.y, mothership.position.z), mothership.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
                 {
-                    Debug.DrawRay(new Vector3(mothership.position.x - (mothership.localScale.x / 2), mothership.position.y , mothership.position.z), mothership.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
+                    Debug.DrawRay(new Vector3(mothership.position.x - (mothership.localScale.x / 2), mothership.position.y, mothership.position.z), mothership.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
                     raycastHit(hit);
                 }
                 if (Physics.Raycast(new Vector3(mothership.position.x + (mothership.localScale.x / 2), mothership.position.y, mothership.position.z), mothership.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
                 {
-                    Debug.DrawRay(new Vector3(mothership.position.x + (mothership.localScale.x / 2), mothership.position.y , mothership.position.z), mothership.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
+                    Debug.DrawRay(new Vector3(mothership.position.x + (mothership.localScale.x / 2), mothership.position.y, mothership.position.z), mothership.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
                     raycastHit(hit);
                 }
                 //
                 //
-            
-            //if (Physics.CapsuleCast(mothership.position, mothership.position + Vector3.up * mothership.localScale.y, mothership.localScale.x, mothership.forward, out hit, 10))
-            //{
-            //    Debug.Log(hit.collider.gameObject.name);                
-            //}
 
-            // Does the ray intersect any objects excluding the player layer
+                //if (Physics.CapsuleCast(mothership.position, mothership.position + Vector3.up * mothership.localScale.y, mothership.localScale.x, mothership.forward, out hit, 10))
+                //{
+                //    Debug.Log(hit.collider.gameObject.name);                
+                //}
 
+                // Does the ray intersect any objects excluding the player layer
+
+            }
         }
+        
+        
     }
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

@@ -1,5 +1,6 @@
 ﻿using BeardedManStudios.Forge.Networking;
 using BeardedManStudios.Forge.Networking.Generated;
+using BeardedManStudios.Forge.Networking.Unity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,6 +23,7 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
     Transform player;
     GameObject EndScreen;
     Text EndText;
+    public bool isOwner;
 
     public float playerDetectionRange = 15625f;
     public float rotateSpeed = 5f;
@@ -72,7 +74,7 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
         MotherShipClass.yMax = yMax;
         MotherShipClass.zMin = zMin;
         MotherShipClass.zMax = zMax;
-
+        isOwner = networkObject.IsOwner;
         EnemyManager.Instance.mothership = this;
         IsAlive = true;
         CharStats = new CharacterStats(100, 0);
@@ -104,21 +106,49 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
         
     }
 
+    public IBaseEnemy SpawnMinions(EnemyType etype, int qty)
+    {
+        IBaseEnemy e = null;
+        for (int i = 0; i < qty; i++)
+        {
+            //newEnemy.transform.position += MotherShipClass.MinionsSpawnLocation.position;
+            //Debug.Log("New Enemy Created");
+            // NetworkManager.Instance.InstantiateMothership(0, new Vector3(200, 25, 50));
+
+            if (etype == EnemyType.Seeker)
+            {
+                e = (IBaseEnemy)NetworkManager.Instance.InstantiateSeeker(0, MotherShipClass.MinionsSpawnLocation.position, Quaternion.identity);
+            }
+            else if (etype == EnemyType.Drones)
+            {
+                e = (IBaseEnemy)NetworkManager.Instance.InstantiateDrone(0, MotherShipClass.MinionsSpawnLocation.position, Quaternion.identity);
+            }
+
+            //((MonoBehaviour)e).transform.SetParent(enemyParent);
+            e.Initialize();
+            EnemyManager.Instance.toAdd.Push(e);
+        }
+        return e;
+    }
+
     public void Update()
     {
         player = player ?? PlayerManager.Instance.pilot.transform;
-        /*if (networkObject == null)
+        if (networkObject == null)
             return;
 
-        // If we are not the owner of this network object then we should
-        // move this cube to the position/rotation dictated by the owner
+        //If we are not the owner of this network object then we should
+        // move this cube to the position/ rotation dictated by the owner
         if (!networkObject.IsOwner)
         {
             transform.position = networkObject.position;
             transform.rotation = networkObject.rotation;
             return;
-        }*/
-        //Debug.Log("player"+player.name);
+        }
+        //Debug.Log("player" + player.name);
+        networkObject.position = transform.position;
+        networkObject.rotation = transform.rotation;
+
 
         if (PlayerInRange())
         {
