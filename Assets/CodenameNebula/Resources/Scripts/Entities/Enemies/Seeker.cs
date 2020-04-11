@@ -7,14 +7,14 @@ using BeardedManStudios.Forge.Networking;
 public class Seeker : SeekerBehavior, IMinion
 {
 
-    public float playerDetectionRange = 225f;
+    public float playerDetectionRange = 50000f;
     public float rotateSpeed = 5f;
     public float MovementSpeed = 5f;
     Transform player;
     public float sphereRadius = 1.5f;
     public float sweepDistance = 2f;
     Transform barrel;
-    float laserCooldown = 10f;
+    float laserCooldown = 0f;
 
     public bool MoveWithBoss { get; set; }
     public bool SeekPlayer { get; set; }
@@ -32,12 +32,16 @@ public class Seeker : SeekerBehavior, IMinion
 
     void Start()
     {
-        
+        barrel = transform.Find("Barrel");
+        CharStats = new CharacterStats(10, 0);
+        MaxHealth = CharStats.health;
+        IsAlive = true;
     }
 
     public void Die()
     {
         gameObject.SetActive(false);
+        IsAlive = false;
         EnemyManager.Instance.EnemyDied(this);
     }
 
@@ -48,34 +52,36 @@ public class Seeker : SeekerBehavior, IMinion
 
     public void Initialize()
     {
-        barrel = transform.Find("Barrel");
-        CharStats = new CharacterStats(10, 0);
-        MaxHealth = CharStats.health;
+        
     }
 
     public void PhysicsRefresh(float dt)
     {
-        
+
     }
 
     public void PostInitialize()
     {
-        
+
     }
 
     public void Refresh(float dt)
     {
         player = player ?? PlayerManager.Instance.pilot.transform;
 
-        Debug.Log("player" + player.name);
+        //Debug.Log("player" + player.name);
+
+        if (networkObject == null)
+            return;
 
         if (PlayerInRange())
         {
             //shoot
-            if(laserCooldown == 0)
+            if (laserCooldown == 0)
             {
+                Debug.Log("Shot laser");
                 Shoot();
-                laserCooldown = 10f;
+                laserCooldown = 2f;
             }
             laserCooldown -= dt;
         }
@@ -86,11 +92,8 @@ public class Seeker : SeekerBehavior, IMinion
             {
                 DodgeObstacle();
             }
-            else
-            {
-                GoToPlayer();
-            }
 
+            GoToPlayer();
         }
     }
 
@@ -99,10 +102,6 @@ public class Seeker : SeekerBehavior, IMinion
         //throw new System.NotImplementedException();
     }
 
-    public void TakeDamage()
-    {
-        
-    }
 
     public void TakeDamage(float damage)
     {
@@ -126,7 +125,7 @@ public class Seeker : SeekerBehavior, IMinion
 
     public void Update()
     {
-        
+
     }
 
 
@@ -176,5 +175,10 @@ public class Seeker : SeekerBehavior, IMinion
         ParticleFactory.Instance.CreateParticle(ParticleFactory.ParticleType.HomingMissileExplosion, transform.position, Quaternion.identity);
     }
 
-    public override void ShootLaser(RpcArgs args) => ProjectileFactory.Instance.CreateProjectile(ProjectileFactory.ProjectileType.Laser, barrel.position, player.position ,Quaternion.identity, 50);
+    public override void ShootLaser(RpcArgs args)
+    {
+        AudioSource.PlayClipAtPoint(AudioManager.Instance.soundDict["laser"], transform.position);
+        ProjectileFactory.Instance.CreateProjectile(ProjectileFactory.ProjectileType.Laser, barrel.position, player.position, Quaternion.identity, 50);
+
+    }
 }

@@ -3,6 +3,7 @@ using BeardedManStudios.Forge.Networking.Generated;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
@@ -19,6 +20,8 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
     float shieldCooldown;
     float cloakCooldown;
     Transform player;
+    GameObject EndScreen;
+    Text EndText;
 
     public float playerDetectionRange = 15625f;
     public float rotateSpeed = 5f;
@@ -44,6 +47,7 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
         //EnemyManager.Instance.EnemyDied(this);
         //isAlive = false;
         //gameObject.SetActive(false);
+        GetEndScreen();
         GameFlow.Instance.isPaused = true;
         //game win message
     }
@@ -84,6 +88,15 @@ public class MotherShip : MothershipBehavior, IBaseEnemy, IShielded
     public void PhysicsRefresh(float dt)
     {
         
+    }
+
+    void GetEndScreen()
+    {
+        EndScreen = GameObject.Find("EndScreen");
+        EndScreen?.transform.Find("EndText").TryGetComponent<Text>(out EndText);
+        EndText.text = "You win!";
+        EndScreen.SetActive(true);
+        GameFlow.Instance.isPaused = true;
     }
 
     public void PostInitialize()

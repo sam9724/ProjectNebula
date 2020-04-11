@@ -40,6 +40,8 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
     Transform shield;
     Material shieldMat;
 
+    GameObject EndScreen;
+    Text EndText;
     //required coz we don't control the spawning of networked objects in the scene.
     public void Start()
     {
@@ -49,6 +51,15 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
         rb = gameObject.GetComponent<Rigidbody>();
 
         Initialize();
+    }
+
+    void GetEndScreen()
+    {
+        EndScreen = GameObject.Find("EndScreen");
+        EndScreen?.transform.Find("EndText").TryGetComponent<Text>(out EndText);
+        EndText.text = "You lose";
+        
+        GameFlow.Instance.isPaused = true;
     }
     public void Initialize()
     {
@@ -98,6 +109,8 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
         {
             transform.position = networkObject.position;
             transform.rotation = networkObject.rotation;
+            CharStats.health = networkObject.health;
+            CharStats.shield = networkObject.shield;
             return;
         }
 
@@ -124,7 +137,8 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
         // and rotation across the network for receivers to move to in the above code
         networkObject.position = transform.position;
         networkObject.rotation = transform.rotation;
-
+        networkObject.health = CharStats.health;
+        networkObject.shield = CharStats.shield;
         // Note: Forge Networking takes care of only sending the delta, so there
         // is no need for you to do that manually
         notUnderAttackTimer += dt;
@@ -139,6 +153,8 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
         //Changing healthbar and shieldbar values
         healthbar.fillAmount = CharStats.health / maxHealth;
         shieldbar.fillAmount = CharStats.shield / maxShield;
+
+        Debug.Log(CharStats.health);
             
     }
 
@@ -162,6 +178,7 @@ public class Pilot : PilotBehavior, IBasePlayer, IDamagable, IShielded
     public void Die()
     {
         //gameObject.SetActive(false);
+        GetEndScreen();
         GameFlow.Instance.isPaused = true;
     }
 

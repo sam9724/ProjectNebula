@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using BeardedManStudios.Forge.Networking.Unity;
 
 public enum EnemyType { Seeker, Drones }
 
@@ -33,7 +34,7 @@ public class EnemyManager
         MinionsSpawnLocation = MotherShipClass.MinionsSpawnLocation;
         foreach (EnemyType etype in System.Enum.GetValues(typeof(EnemyType))) //fill the resource dictionary with all the prefabs
         {
-            enemyPrefabDict.Add(etype, Resources.Load<GameObject>("Prefabs/Enemy/" + etype.ToString())); //Each enum matches the name of the enemy perfectly
+            enemyPrefabDict.Add(etype, Resources.Load<GameObject>("Prefabs/Enemies/" + etype.ToString())); //Each enum matches the name of the enemy perfectly
         }
         //Debug.Log("enemyPrefabDict: "+enemyPrefabDict.Count);
     }
@@ -90,10 +91,20 @@ public class EnemyManager
         IBaseEnemy e = null;
         for (int i = 0; i < qty; i++)
         {
-            GameObject newEnemy = GameObject.Instantiate(enemyPrefabDict[etype],enemyParent);
-            newEnemy.transform.position += MotherShipClass.MinionsSpawnLocation.position;
+            //newEnemy.transform.position += MotherShipClass.MinionsSpawnLocation.position;
             //Debug.Log("New Enemy Created");
-            e = newEnemy.GetComponent<IBaseEnemy>();
+           // NetworkManager.Instance.InstantiateMothership(0, new Vector3(200, 25, 50));
+            
+            if(etype == EnemyType.Seeker)
+            {
+                e =(IBaseEnemy)NetworkManager.Instance.InstantiateSeeker(0, MotherShipClass.MinionsSpawnLocation.position, Quaternion.identity);
+            }
+            else if (etype == EnemyType.Drones)
+            {
+                e = (IBaseEnemy)NetworkManager.Instance.InstantiateDrone(0, MotherShipClass.MinionsSpawnLocation.position, Quaternion.identity);
+            }
+
+            //((MonoBehaviour)e).transform.SetParent(enemyParent);
             e.Initialize();
             toAdd.Push(e);
         }           

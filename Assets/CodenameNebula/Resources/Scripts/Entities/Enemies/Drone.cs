@@ -33,6 +33,7 @@ public class Drone : DroneBehavior, IMinion
     public void Die()
     {
         gameObject.SetActive(false);
+        IsAlive = false;
         EnemyManager.Instance.EnemyDied(this);
     }
 
@@ -43,13 +44,15 @@ public class Drone : DroneBehavior, IMinion
 
     public void Start()
     {
+        missileLocation = transform.Find("missilePos");
+        CharStats = new CharacterStats(10, 0);
+        MaxHealth = CharStats.health;
+        IsAlive = true;
     }
 
     public void Initialize()
     {
-        missileLocation = transform.Find("missilePos");
-        CharStats = new CharacterStats(10, 0);
-        MaxHealth = CharStats.health;
+        
     }
 
     public void PhysicsRefresh(float dt)
@@ -87,7 +90,7 @@ public class Drone : DroneBehavior, IMinion
             networkObject.position = transform.position;
             networkObject.rotation = transform.rotation;
         }
-        Debug.Log("player" + player.name);
+        //Debug.Log("player" + player.name);
         if (PlayerInRange() && missileCooldown == 0)
         {
             networkObject.SendRpc(RPC_SHOOT_MISSILE, Receivers.All);
@@ -137,6 +140,7 @@ public class Drone : DroneBehavior, IMinion
 
     public override void ShootMissile(RpcArgs args)
     {
+        AudioSource.PlayClipAtPoint(AudioManager.Instance.soundDict["missile"], transform.position);
         ProjectileFactory.Instance.CreateProjectile(ProjectileFactory.ProjectileType.HomingMissile, missileLocation.position, player.position, Quaternion.identity, 10);
     }
 }

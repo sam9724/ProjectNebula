@@ -44,6 +44,8 @@ public class Gunner : GunnerBehavior, IBasePlayer
 
     Vector3 screenCenter;
     public Camera mainCamera;
+    GameObject EndScreen;
+    Text EndText;
 
     //required coz we don't control the spawning of networked objects in the scene.
     public void Start()
@@ -74,6 +76,22 @@ public class Gunner : GunnerBehavior, IBasePlayer
     public void Initialize()
     {
         
+    }
+
+    public void Die()
+    {
+        //gameObject.SetActive(false);
+        GetEndScreen();
+        GameFlow.Instance.isPaused = true;
+    }
+
+    void GetEndScreen()
+    {
+        EndScreen = GameObject.Find("EndScreen");
+        EndScreen?.transform.Find("EndText").TryGetComponent<Text>(out EndText);
+        EndText.text = "You lose";
+        
+        GameFlow.Instance.isPaused = true;
     }
 
     // Use this for initialization
@@ -110,7 +128,10 @@ public class Gunner : GunnerBehavior, IBasePlayer
         }
 
         // Let the owner move the cube around with the arrow keys
-
+        if(PlayerManager.Instance.pilot.CharStats.health <= 0)
+        {
+            Die();
+        }
 
 
 #if UNITY_ANDROID
@@ -143,6 +164,8 @@ public class Gunner : GunnerBehavior, IBasePlayer
 
         healthbar.fillAmount = PlayerManager.Instance.pilot.CharStats.health/ PlayerManager.Instance.pilot.maxHealth;
         shieldbar.fillAmount = PlayerManager.Instance.pilot.CharStats.shield/ PlayerManager.Instance.pilot.maxShield;
+
+        Debug.Log(PlayerManager.Instance.pilot.CharStats.health);
         
     }
     void onShootButton()

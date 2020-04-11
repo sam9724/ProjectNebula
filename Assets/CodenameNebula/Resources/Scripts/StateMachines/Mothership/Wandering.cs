@@ -22,7 +22,7 @@ public class Wandering : StateMachineBehaviour
         TempTime += Time.deltaTime;
         if (TempTime>60f)
         {
-            EnemyManager.Instance.NumberOfMinionsToSpawn(5, 3);
+            EnemyManager.Instance.NumberOfMinionsToSpawn(3, 2);
             TempTime = 0;
         }
     }

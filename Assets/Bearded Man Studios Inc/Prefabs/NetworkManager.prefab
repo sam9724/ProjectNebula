@@ -46,10 +46,14 @@ MonoBehaviour:
   ChatManagerNetworkObject:
   - {fileID: 1000012032569418, guid: b454b1be0b2c3fa4fb48430867af7566, type: 3}
   CubeForgeGameNetworkObject: []
+  DroneNetworkObject:
+  - {fileID: 7692343735736241101, guid: 5c7a1c3c208886f4184939605548cc00, type: 3}
   ExampleProximityPlayerNetworkObject:
   - {fileID: 1000012738253334, guid: feb25ecf90a8d8b4ab922a455249997b, type: 3}
   GunnerNetworkObject:
   - {fileID: 5042675065897102564, guid: c0e714af7a3471a48b7692606963ad54, type: 3}
+  MothershipNetworkObject:
+  - {fileID: 7057162320259732471, guid: 5ba55f63db9b55345891295fcf514829, type: 3}
   NetworkCameraNetworkObject:
   - {fileID: 139536, guid: 661f29f0c0c86fa47b6015bd602d0ac6, type: 3}
   NetworkFlowNetworkObject:
@@ -57,7 +61,7 @@ MonoBehaviour:
   PilotNetworkObject:
   - {fileID: 1152354105411914, guid: cdbec52167efb6a48b63cebb3284c246, type: 3}
   Player1PositionNetworkObject: []
+  SeekerNetworkObject:
+  - {fileID: 6356868261390679155, guid: 655c791f231e41a4188fcc5162565229, type: 3}
   TestNetworkObject: []
-  MothershipNetworkObject:
-  - {fileID: 7057162320259732471, guid: 5ba55f63db9b55345891295fcf514829, type: 3}
   automaticScenes: 1
