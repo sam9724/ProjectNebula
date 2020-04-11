@@ -1665,7 +1665,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa873fe3760c46349ae7c2e17cb9562b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerDetectionRange: 3000
+  playerDetectionRange: 250
   rotateSpeed: 5
   MovementSpeed: 5
   sphereRadius: 1.5

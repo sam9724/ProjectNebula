@@ -100,10 +100,10 @@ public class Seeker : SeekerBehavior, IMinion
         else
         {
             //check obstacle if none, move to player else move away from obstacle
-            if (CheckObstacle())
-            {
-                DodgeObstacle();
-            }
+            //if (CheckObstacle())
+            //{
+            //    DodgeObstacle();
+            //}
 
             GoToPlayer();
         }
