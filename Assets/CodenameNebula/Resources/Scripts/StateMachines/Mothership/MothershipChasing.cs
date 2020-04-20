@@ -31,7 +31,7 @@ public class MothershipChasing : StateMachineBehaviour
             FollowToAPoint(player.position); //        animator.ApplyBuiltinRootMotion();
 
             // Debug.Log("MAterial: "+EnemyManager.Instance.mothership.GetComponentInChildren<MeshRenderer>().material.name);// SetFloat("CloakSlider",1);
-            if (EnemyManager.Instance.minionInScene() < 1)
+            if (EnemyManager.Instance.MinionInScene() < 1)
             {
                 minionsTimer += Time.deltaTime;
                 if (minionsTimer > 5f)

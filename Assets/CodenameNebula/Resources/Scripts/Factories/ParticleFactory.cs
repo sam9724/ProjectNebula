@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public class ParticleFactory
+public class ParticleFactory : GenericFactory<Particle, ParticleFactory.ParticleType>
 {
 
     #region Singleton
@@ -11,7 +11,6 @@ public class ParticleFactory
     public static ParticleFactory Instance { get { return instance ?? (instance = new ParticleFactory()); } }
     #endregion
 
-    public Dictionary<string, GameObject> prefabDict;
     public enum ParticleType { RailExplosion, LaserExplosion, DestructionBeamExplosion, HomingMissileExplosion };
     
 
@@ -22,23 +21,11 @@ public class ParticleFactory
 
     public Particle CreateParticle(ParticleType pType, Vector3 pos, Quaternion rot)
     {
-        Particle particle;
+        Particle particle = CreateObject(pType, pos, rot, ParticleManager.Instance.partParent);
 
-        if (GenericObjectPool.Instance.TryDepool(pType.GetType(), out IPoolable poolable))
-        {
-            particle = (poolable as Particle);
-            particle.transform.position = pos;
-            particle.transform.rotation = rot;
-            particle.gameObject.SetActive(true);
-        }
-        else
-        {
-            particle = GameObject.Instantiate(prefabDict[pType.ToString()], pos, rot).GetComponent<Particle>();
-            particle.partType = pType;
-        }
         particle.Initialize();
-        ParticleManager.Instance.particles.Add(particle);
-        particle.transform.SetParent(ParticleManager.Instance.partParent);
+        ParticleManager.Instance.managingSet.Add(particle);
+        particle.partType = pType;
 
         return particle;
     }

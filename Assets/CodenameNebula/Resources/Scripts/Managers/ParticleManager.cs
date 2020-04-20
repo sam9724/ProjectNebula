@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-public class ParticleManager 
+public class ParticleManager : GenericSetManager<Particle>
 {
     #region Singleton
     private static ParticleManager instance;
@@ -11,9 +11,6 @@ public class ParticleManager
     public static ParticleManager Instance { get { return instance ?? (instance = new ParticleManager()); } }
     #endregion
 
-    public Stack<Particle> toRemove;
-    public Stack<Particle> toAdd;
-    public HashSet<Particle> particles;
     public Transform partParent;
     
     public Transform spawnLocation;
@@ -22,39 +19,28 @@ public class ParticleManager
     public Transform pooledPartParent;
 
 
-    public void Initialize()
+    public override void Initialize()
     {
-        particles = new HashSet<Particle>();
-        toRemove = new Stack<Particle>();
-        toAdd = new Stack<Particle>();
+        base.Initialize();
         partParent = new GameObject("PartParent").transform;
         pooledPartParent = new GameObject("DeadPart").transform;
     }
 
-    public void PostInitialize()
+    public override void PostInitialize()
     {
-
+        base.PostInitialize();
     }
 
 
-    public void Refresh(float dt)
+    public override void Refresh(float dt)
     {
-        foreach (Particle p in particles)
-        {
-            p.Refresh(dt);
-        }
-
-        while (toRemove.Count > 0)
-            particles.Remove(toRemove.Pop());
-
-        while (toAdd.Count > 0)
-            particles.Add(toAdd.Pop());
+        base.Refresh(dt);
     }
 
 
-    public void PhysicsRefresh(float dt)
+    public override void PhysicsRefresh(float dt)
     {
-
+        base.PhysicsRefresh(dt);
     }
 
     public void ParticleDied(Particle p)

@@ -21,7 +21,7 @@ public class SceneGUIStatsEditor : Editor
         fields = fields ?? typeof(CharacterStats).GetFields();
 
         IBaseCharacter character = target as IBaseCharacter;
-        GameObject go = target as GameObject;
+        GameObject go = (target as MonoBehaviour).gameObject;
         CharacterStats stats = character.CharStats;
         Color originalHandleColor = Handles.color;
 
@@ -37,7 +37,7 @@ public class SceneGUIStatsEditor : Editor
         {
             string propertyName = fields[i].Name;
 
-            Rect rect = new Rect(guiPoint.x - 100, guiPoint.y - (500 + i * 21), 100, 20);
+            Rect rect = new Rect(guiPoint.x - 100, guiPoint.y - (150 + i * 21), 100, 20);
             string val = GUI.TextField(rect, propertyName + ": " + stats.GetType().GetField(propertyName).GetValue(stats), new GUIStyle(GUI.skin.box));
             if (float.TryParse(Regex.Match(val, @"\d+").Value, out float newVal))
                 stats.GetType().GetField(propertyName).SetValue(stats, newVal);

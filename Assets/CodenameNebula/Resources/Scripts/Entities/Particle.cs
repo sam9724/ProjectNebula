@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Particle : MonoBehaviour, IPoolable
+public class Particle : MonoBehaviour, IPoolable, IManagable
 {
     public ParticleFactory.ParticleType partType;
 

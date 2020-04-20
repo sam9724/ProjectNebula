@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public class ProjectileFactory
+public class ProjectileFactory : GenericFactory<Projectile, ProjectileFactory.ProjectileType>
 {
 
     #region Singleton
@@ -11,10 +11,8 @@ public class ProjectileFactory
     public static ProjectileFactory Instance { get { return instance ?? (instance = new ProjectileFactory()); } }
     #endregion
 
-    public Dictionary<string, GameObject> prefabDict;
     public enum ProjectileType { Rail, Laser, DestructorBeam, HomingMissile };
-    
-    //static int bulletRecycleCount = 10;
+   
 
     public void Initialize()
     {
@@ -23,23 +21,11 @@ public class ProjectileFactory
 
     public Projectile CreateProjectile(ProjectileType pType, Vector3 pos, Vector3 target, Quaternion rot, float speed)
     {
-        Projectile projectile;
-
-        if (GenericObjectPool.Instance.TryDepool(pType.GetType(), out IPoolable poolable))
-        {
-            projectile = (poolable as Projectile);
-            projectile.transform.position = pos;
-            projectile.transform.rotation = rot;
-            projectile.gameObject.SetActive(true);
-        }
-        else
-        {
-            projectile = GameObject.Instantiate(prefabDict[pType.ToString()], pos, rot).GetComponent<Projectile>();
-            projectile.projType = pType;
-        }
+        Projectile projectile = CreateObject(pType, pos, rot, ProjectileManager.Instance.projParent);
+        
         projectile.Initialize();
-        ProjectileManager.Instance.projectiles.Add(projectile);
-        projectile.transform.SetParent(ProjectileManager.Instance.projParent);
+        ProjectileManager.Instance.managingSet.Add(projectile);
+        projectile.projType = pType;
         projectile.speed = speed;
         projectile.target = target;
 

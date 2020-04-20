@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class Projectile : MonoBehaviour, IPoolable
+public abstract class Projectile : MonoBehaviour, IPoolable, IManagable
 {
 
     public ProjectileFactory.ProjectileType projType;
@@ -15,7 +15,7 @@ public abstract class Projectile : MonoBehaviour, IPoolable
 
     }
 
-    public virtual void PhysicsRefresh()
+    public virtual void PhysicsRefresh(float dt)
     {
 
     }

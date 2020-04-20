@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-public class ProjectileManager 
+public class ProjectileManager :GenericSetManager<Projectile>
 {
     #region Singleton
     private static ProjectileManager instance;
@@ -11,9 +11,6 @@ public class ProjectileManager
     public static ProjectileManager Instance { get { return instance ?? (instance = new ProjectileManager()); } }
     #endregion
 
-    public Stack<Projectile> toRemove;
-    public Stack<Projectile> toAdd;
-    public HashSet<Projectile> projectiles;
     public Transform projParent;
     
     public Transform spawnLocation;
@@ -22,39 +19,28 @@ public class ProjectileManager
     public Transform pooledProjParent;
 
 
-    public void Initialize()
+    public override void Initialize()
     {
-        projectiles = new HashSet<Projectile>();
-        toRemove = new Stack<Projectile>();
-        toAdd = new Stack<Projectile>();
+        base.Initialize();
         projParent = new GameObject("ProjParent").transform;
         pooledProjParent = new GameObject("DeadProj").transform;
     }
 
-    public void PostInitialize()
+    public override void PostInitialize()
     {
-
+        base.PostInitialize();
     }
 
 
-    public void Refresh(float dt)
+    public override void Refresh(float dt)
     {
-        foreach (Projectile p in projectiles)
-        {
-            p.Refresh(dt);
-        }
-
-        while (toRemove.Count > 0)
-            projectiles.Remove(toRemove.Pop());
-
-        while (toAdd.Count > 0)
-            projectiles.Add(toAdd.Pop());
+        base.Refresh(dt);
     }
 
 
-    public void PhysicsRefresh(float dt)
+    public override void PhysicsRefresh(float dt)
     {
-
+        base.PhysicsRefresh(dt);
     }
 
     public void ProjectileDied(Projectile p)
